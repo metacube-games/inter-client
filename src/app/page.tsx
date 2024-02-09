@@ -18,10 +18,11 @@ export default function Home() {
   useEffect(() => {
     // Function to update the time left
     const updateTimer = () => {
-      const now = new Date();
+      const nowTimeStamp = new Date().getTime();
       // Set the target date and time: 10th of February 2024, 5pm UTC
       const targetDate = new Date(Date.UTC(2024, 1, 10, 17, 0, 0));
-      const difference = targetDate - now;
+      const targetTimeStamp = targetDate.getTime();
+      const difference = targetTimeStamp - nowTimeStamp;
 
       // Calculate time left if the difference is positive
       if (difference > 0) {
