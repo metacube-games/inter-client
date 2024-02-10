@@ -14,37 +14,44 @@ export default function Home() {
     minutes: 0,
     seconds: 0,
   });
+  const [ended, setEnded] = useState(false);
 
-  // useEffect(() => {
-  //   // Function to update the time left
-  //   const updateTimer = () => {
-  //     const nowTimeStamp = new Date().getTime();
-  //     // Set the target date and time: 10th of February 2024, 5pm UTC
-  //     const targetDate = new Date(Date.UTC(2024, 1, 10, 17, 0, 0));
-  //     const targetTimeStamp = targetDate.getTime();
-  //     const difference = targetTimeStamp - nowTimeStamp;
+  useEffect(() => {
+    // Function to update the time left
+    const updateTimer = () => {
+      const nowTimeStamp = new Date().getTime();
+      // Set the target date and time: 10th of February 2024, 5pm UTC
+      const targetDate = new Date(Date.UTC(2024, 1, 10, 17, 0, 0));
+      const targetFinishDate = new Date(Date.UTC(2024, 1, 10, 17, 30, 0));
 
-  //     // Calculate time left if the difference is positive
-  //     if (difference > 0) {
-  //       const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-  //       const hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
-  //       const minutes = Math.floor((difference / 1000 / 60) % 60);
-  //       const seconds = Math.floor((difference / 1000) % 60);
+      const targetTimeStamp = targetDate.getTime();
+      const difference = targetTimeStamp - nowTimeStamp;
+      const endedTime = targetFinishDate.getTime() - nowTimeStamp;
 
-  //       setTimeLeft({ days, hours, minutes, seconds });
-  //     } else {
-  //       // If the target date has passed, set all values to zero
-  //       setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-  //     }
-  //   };
+      // Calculate time left if the difference is positive
+      if (difference > 0) {
+        const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
+        const minutes = Math.floor((difference / 1000 / 60) % 60);
+        const seconds = Math.floor((difference / 1000) % 60);
 
-  //   // Update timer immediately and every second
-  //   updateTimer();
-  //   const intervalId = setInterval(updateTimer, 1000);
+        setTimeLeft({ days, hours, minutes, seconds });
+        setEnded(false);
+      } else if (endedTime < 0) {
+        setEnded(true);
+      } else {
+        // If the target date has passed, set all values to zero
+        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+      }
+    };
 
-  //   // Cleanup interval on component unmount
-  //   return () => clearInterval(intervalId);
-  // }, []);
+    // Update timer immediately and every second
+    updateTimer();
+    const intervalId = setInterval(updateTimer, 1000);
+
+    // Cleanup interval on component unmount
+    return () => clearInterval(intervalId);
+  }, []);
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-24 relative">
@@ -63,16 +70,25 @@ export default function Home() {
         className="mb-16"
       ></Image>
       <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4 mx-auto">
-          Alpha test just finished, follow us on our socials to stay updated for
-          the next event!
-        </h1>
-        {/* <div className="text-2xl">
-          <span>{timeLeft.days} Days </span>
-          <span>{timeLeft.hours} Hours </span>
-          <span>{timeLeft.minutes} Minutes </span>
-          <span>{timeLeft.seconds} Seconds</span>
-        </div> */}
+        {ended ? (
+          <h1 className="text-4xl font-bold mb-4 mx-auto">
+            Alpha test just finished, follow us on our socials to stay updated
+            for the next event!
+          </h1>
+        ) : (
+          <>
+            <h1 className="text-4xl font-bold mb-4 mx-auto">
+              Get Ready to Play
+            </h1>
+
+            <div className="text-2xl">
+              <span>{timeLeft.days} Days </span>
+              <span>{timeLeft.hours} Hours </span>
+              <span>{timeLeft.minutes} Minutes </span>
+              <span>{timeLeft.seconds} Seconds</span>
+            </div>
+          </>
+        )}
       </div>
       <div className="flex flex-col items-center mt-16 ">
         <h1 className="text-3xl font-bold">Join us</h1>
