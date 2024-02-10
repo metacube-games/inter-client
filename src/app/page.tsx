@@ -42,6 +42,7 @@ export default function Home() {
       } else {
         // If the target date has passed, set all values to zero
         setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+        window.location.reload();
       }
     };
 
