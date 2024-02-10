@@ -88,7 +88,7 @@ export default function Home() {
               rel="noopener noreferrer"
             />
             <SocialIcon
-              url="https://discord.gg/3mgyq8FN"
+              url="https://discord.gg/FGV6HkMbNj"
               bgColor="transparent"
               fgColor="#000000"
               style={{ height: 96, width: 96 }}
