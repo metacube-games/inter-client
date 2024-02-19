@@ -24,9 +24,6 @@ export default function Home() {
       ></Image>
       <Countdown />
       <div className="flex flex-col items-center mt-16">
-        <h1 className="text-xl mb-2 font-bold text-center">
-          100 alpha NFTs will be hidden in the cubes!
-        </h1>
         <h2 className="text-3xl font-bold">Join us</h2>
         <div className="flex flex-row space-y-0 space-x-24 p-0">
           <div className="flex flex-row space-y-0 space-x-24 p-0">

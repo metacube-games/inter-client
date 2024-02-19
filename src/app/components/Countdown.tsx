@@ -74,6 +74,9 @@ export const Countdown = () => {
                         <span ref={minutesRef}> 0 Minutes </span>
                         <span ref={secondsRef}> 0 Seconds</span>
                     </div>
+                    <span className="text-xl mt-8 font-bold text-center">
+                        100 alpha NFTs will be hidden in the cubes!
+                    </span>
                 </>
             )}
         </div>
