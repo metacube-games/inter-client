@@ -10,4 +10,4 @@ COPY . .
 
 RUN bun install
 
-CMD ["bun", "dev", "--host"]
+CMD ["bun", "dev"]
