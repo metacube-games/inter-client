@@ -43,8 +43,6 @@ export default function RootLayout({
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
         <meta name="keywords" content="Metacube Game, Starknet gaming, collect digital assets, blockchain game, free to play, NFT, NFT game" />
         <link rel="icon" href="/favicon.ico" />
-
-
       </Head>
       <body className={inter.className}>{children}</body>
     </html>
