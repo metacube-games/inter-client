@@ -7,30 +7,7 @@ export const Countdown = () => {
   const hoursRef = useRef<HTMLSpanElement>(null);
   const daysRef = useRef<HTMLSpanElement>(null);
   const [ended, setEnded] = useState(false);
-
-  const nowTimeStamp = new Date().getTime();
-  // Set the target date and time: 10th of February 2024, 5pm UTC
-  const targetDate = new Date(Date.UTC(2024, 5, 1, 16, 0, 0));
-  const targetFinishDate = new Date(Date.UTC(2024, 5, 2, 16, 0, 0));
-
-  const targetTimeStamp = targetDate.getTime();
-  const difference = targetTimeStamp - nowTimeStamp;
-  const endedTime = targetFinishDate.getTime() - nowTimeStamp;
-
-  let secondss, minutess, hourss, dayss;
-  // Calculate time left if the difference is positive
-  if (difference > 0) {
-    const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
-    const minutes = Math.floor((difference / 1000 / 60) % 60);
-    const seconds = Math.floor((difference / 1000) % 60);
-
-    // if (secondsLeft.current)
-    secondss = `0 Seconds `;
-    minutess = `${minutes} Minutes `;
-    hourss = `${hours} Hours `;
-    dayss = `${days} Days `;
-  }
+ 
   useEffect(() => {
     // Function to update the time left
     const updateTimer = () => {
@@ -80,7 +57,7 @@ export const Countdown = () => {
   }, []);
 
   return (
-    <div className="text-center mb-12 w-auto z-10   text-white ">
+    <div className="text-center w-auto z-10 text-white mb-16" style={{width:'80vw'}}>
       {ended ? (
         <h1 className="text-4xl font-bold mb-4 mx-auto">
           Alpha test just finished, follow us on our socials to stay updated for
@@ -91,12 +68,12 @@ export const Countdown = () => {
           <h1 className="text-4xl font-bold mb-4 mx-auto"> 
           Beta starts in</h1>
           <div className="text-2xl">
-            <span ref={daysRef}>{dayss}</span>
-            <span ref={hoursRef}>{hourss}</span>
-            <span ref={minutesRef}>{minutess}</span>
-            <span ref={secondsRef}>{secondss}</span>
+            <span ref={daysRef}> 0 Days </span>
+            <span ref={hoursRef}> 0 Hours </span>
+            <span ref={minutesRef}> 0 Minutes </span>
+            <span ref={secondsRef}> 0 Seconds</span>
           </div>
-          <span className="text-xl mt-8 font-bold text-center">
+          <span className="text-xl mt-10 font-bold text-center">
             1000 beta NFTs will be hidden in the cubes!
           </span>
           

@@ -7,7 +7,6 @@ export default function Home() {
   // Initialize state for days, hours, minutes, and seconds
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-20 relative">
-      
       <div className="absolute w-full h-full object-cover circular-landscape">
         <video
           src={"/Trim.mp4"}
@@ -18,30 +17,29 @@ export default function Home() {
         />
       </div>
  
-      <div className="absolute top-0 left-0 p-6 ">
+      <div className="absolute top-0 left-0 p-6">
         <Link href="https://metacube.games" passHref legacyBehavior>
           <a className="text-white text-lg text-black-500 hover:text-gray-300 transition duration-150 ease-in-out">
             <span className="font-bold text-white">&lt;</span> Back to Metacube
           </a>
         </Link>
       </div>
-      <div   className="w-screen flex flex-col items-center bottom-0 backdrop-contrast-70 z-10 text-center ">
-      <h1 className="text-2xl font-bold mb-0 mx-auto text-white ">The Stove army spaceship is coming! 
-          </h1>
-        </div>
+      <div className="w-screen flex flex-col items-center z-10 text-center mb-10 top-0">
+         <h1 className="text-2xl font-bold mb-0 mx-auto text-white ">The Stove army spaceship is coming! 
+        </h1>
+      </div>
       <Image
         src="/metacube.svg"
         alt="Metacube logo"
         width={80}
         height={80}
         // add glow
-        style={{  filter: 'drop-shadow(0 0 12px #0ec630)'
-        }}
+        style={{  filter: 'drop-shadow(0 0 12px #0ec630)',margin:'0px', padding:'0px', top:'0px' }}
          className="mb-12 w-auto z-10 box  "
         priority
       ></Image>
       <Countdown />
-      <div className="absolute flex flex-col items-center bottom-2 backdrop-contrast-70 ">
+      <div className="absolute flex flex-col items-center bottom-2 ">
         <h2 className="text-3xl font-bold text-white">Join us</h2>
         <div className="flex flex-row space-y-0 space-x-24 p-0">
           <div className="flex flex-row space-y-0 space-x-24 p-0">
