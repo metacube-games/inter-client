@@ -13,10 +13,11 @@ export default function Home() {
           autoPlay
           muted
           loop
+          playsInline
           className="absolute w-full h-full object-cover opacity-75"
         />
       </div>
- 
+
       <div className="absolute top-0 left-0 p-6">
         <Link href="https://metacube.games" passHref legacyBehavior>
           <a className="text-white text-lg text-black-500 hover:text-gray-300 transition duration-150 ease-in-out">
@@ -25,7 +26,8 @@ export default function Home() {
         </Link>
       </div>
       <div className="w-screen flex flex-col items-center z-10 text-center mb-10 top-0">
-         <h1 className="text-2xl font-bold mb-0 mx-auto text-white ">The Stove army spaceship is coming! 
+        <h1 className="text-2xl font-bold mb-0 mx-auto text-white ">
+          The Stove army spaceship is coming!
         </h1>
       </div>
       <Image
@@ -33,9 +35,13 @@ export default function Home() {
         alt="Metacube logo"
         width={80}
         height={80}
-        // add glow
-        style={{  filter: 'drop-shadow(0 0 12px #0ec630)',margin:'0px', padding:'0px', top:'0px' }}
-         className="mb-12 w-auto z-10 box  "
+        style={{
+          filter: "drop-shadow(0 0 12px #0ec630)",
+          margin: "0px",
+          padding: "0px",
+          top: "0px",
+        }}
+        className="mb-12 w-auto z-10 box  "
         priority
       ></Image>
       <Countdown />
