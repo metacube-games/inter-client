@@ -13,10 +13,11 @@ export default function Home() {
       {ended ? (
         <>
           <div className="absolute w-full h-full object-cover circular-landscape">
-            <img
+            <Image
               src={"/stoveArmy.jpg"}
               className="absolute w-full h-full object-cover opacity-90 "
               style={{ filter: "blur(2px) brightness(0.5)" }}
+              alt="Stove army spaceship"
             />
           </div>
 
