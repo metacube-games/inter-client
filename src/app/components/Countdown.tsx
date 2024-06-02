@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 
 export const Countdown = ({ ended, setEnded }: { ended: boolean, setEnded: (arg0: boolean) => void }) => {
@@ -59,10 +60,20 @@ export const Countdown = ({ ended, setEnded }: { ended: boolean, setEnded: (arg0
   return (
     <div className="text-center w-auto z-10 text-white mb-16" style={{ width: '80vw' }}>
       {ended ? (
-        <h1 className="text-4xl font-bold mb-4 mx-auto">
-          Beta test just finished, follow us on our socials to stay updated for
-          the next event!
-        </h1>
+        <>
+          <h1 className="text-4xl font-bold mb-4 mx-auto">
+            Beta test just finished, follow us on our socials to stay updated for
+            the next event!
+          </h1>
+          <h2 className="text-2xl font-bold mb-0 mx-auto text-green-400  ">
+            If you won NFTs, they should appear soon in your wallet and you will be able to trade them on {" "}
+            <Link href="https://element.market/collections/metacube-passcards?search[toggles][0]=ALL" passHref={true}>
+              <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded">
+                Element
+              </button>
+            </Link>
+          </h2>
+        </>
       ) : (
         <>
           <h1 className="text-4xl font-bold mb-4 mx-auto">

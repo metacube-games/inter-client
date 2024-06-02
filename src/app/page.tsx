@@ -15,6 +15,8 @@ export default function Home() {
           <div className="absolute w-full h-full object-cover circular-landscape">
             <Image
               src={"/stoveArmy.jpg"}
+              height={window.innerHeight}
+              width={window.innerWidth}
               className="absolute w-full h-full object-cover opacity-90 "
               style={{ filter: "blur(2px) brightness(0.5)" }}
               alt="Stove army spaceship"
@@ -29,9 +31,11 @@ export default function Home() {
             </Link>
           </div>
           <div className="w-screen flex flex-col items-center z-10 text-center mb-10 top-0">
-            <h1 className="text-2xl font-bold mb-0 mx-auto text-white ">
+            <h1 className="text-3xl font-bold mb-0 mx-auto text-white ">
               The Stove army will be back stronger and bigger soon!
             </h1>
+
+
           </div>
         </>
       ) : (
