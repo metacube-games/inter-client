@@ -6,7 +6,7 @@ import { Countdown } from "./components/Countdown";
 import { useState } from "react";
 
 export default function Home() {
-  const [ended, setEnded] = useState(false);
+  const [ended, setEnded] = useState(true);
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-20 relative">
@@ -15,8 +15,7 @@ export default function Home() {
           <div className="absolute w-full h-full object-cover circular-landscape">
             <Image
               src={"/stoveArmy.jpg"}
-              height={window.innerHeight}
-              width={window.innerWidth}
+              fill
               className="absolute w-full h-full object-cover opacity-90 "
               style={{ filter: "blur(2px) brightness(0.5)" }}
               alt="Stove army spaceship"
@@ -40,7 +39,7 @@ export default function Home() {
         </>
       ) : (
         <>
-          <div className="absolute w-full h-full object-cover circular-landscape">
+          {/* <div className="absolute w-full h-full object-cover circular-landscape">
             <video
               src={"/Trim.mp4"}
               autoPlay
@@ -62,7 +61,7 @@ export default function Home() {
             <h1 className="text-2xl font-bold mb-0 mx-auto text-white ">
               The Stove army spaceship is coming!
             </h1>
-          </div>
+          </div> */}
         </>
       )}
       <Image
