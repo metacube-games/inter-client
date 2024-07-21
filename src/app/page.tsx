@@ -7,7 +7,6 @@ import { useState } from "react";
 
 export default function Home() {
   const [ended, setEnded] = useState(true);
-
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-20 relative">
       {ended ? (
@@ -25,7 +24,8 @@ export default function Home() {
           <div className="absolute top-0 left-0 p-6">
             <Link href="https://metacube.games" passHref legacyBehavior>
               <a className="text-white text-lg text-black-500 hover:text-gray-300 transition duration-150 ease-in-out">
-                <span className="font-bold text-white">&lt;</span> Back to Metacube
+                <span className="font-bold text-white">&lt;</span> Back to
+                Metacube
               </a>
             </Link>
           </div>
@@ -33,13 +33,11 @@ export default function Home() {
             <h1 className="text-3xl font-bold mb-0 mx-auto text-white ">
               The Stove army will be back stronger and bigger soon!
             </h1>
-
-
           </div>
         </>
       ) : (
         <>
-          {/* <div className="absolute w-full h-full object-cover circular-landscape">
+          <div className="absolute w-full h-full object-cover circular-landscape">
             <video
               src={"/Trim.mp4"}
               autoPlay
@@ -53,7 +51,8 @@ export default function Home() {
           <div className="absolute top-0 left-0 p-6">
             <Link href="https://metacube.games" passHref legacyBehavior>
               <a className="text-white text-lg text-black-500 hover:text-gray-300 transition duration-150 ease-in-out">
-                <span className="font-bold text-white">&lt;</span> Back to Metacube
+                <span className="font-bold text-white">&lt;</span> Back to
+                Metacube
               </a>
             </Link>
           </div>
@@ -61,7 +60,7 @@ export default function Home() {
             <h1 className="text-2xl font-bold mb-0 mx-auto text-white ">
               The Stove army spaceship is coming!
             </h1>
-          </div> */}
+          </div>
         </>
       )}
       <Image
@@ -75,7 +74,7 @@ export default function Home() {
           padding: "0px",
           top: "0px",
         }}
-        className="mb-12 w-auto z-10 box  "
+        className="mb-12 w-auto z-10 box"
         priority
       ></Image>
       <Countdown ended={ended} setEnded={setEnded} />
