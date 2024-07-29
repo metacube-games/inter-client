@@ -23,4 +23,33 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+  /* Customizing the scrollbar */
+  .stable-scrollbar {
+    scrollbar-gutter: stable;
+  }
+  .custom-scrollbar {
+    /* For Webkit browsers like Chrome, Safari */
+    /* gutterbottom */
+    &::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: #000000;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: #22c55e;
+      border-radius: 5px;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+      background: #16a34a;
+    }
+
+    /* For Firefox */
+    scrollbar-width: thin;
+    scrollbar-color: #22c55e #000000;
+  }
 }

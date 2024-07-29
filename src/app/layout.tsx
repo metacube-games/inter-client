@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -61,7 +62,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className="custom-scrollbar">
       <head>
         <script
           type="application/ld+json"
@@ -84,7 +85,9 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={inter.className}>{children}</body>
+      <GoogleOAuthProvider clientId="285204904976-ps77qml7rfllm9scd78fsqgik5tscbkn.apps.googleusercontent.com">
+        <body className={inter.className}>{children}</body>
+      </GoogleOAuthProvider>
     </html>
   );
 }
