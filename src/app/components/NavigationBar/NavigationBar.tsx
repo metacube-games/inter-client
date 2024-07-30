@@ -4,11 +4,11 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { MenuItems } from "./MenuItems";
 import { LoginButton } from "./LoginButton";
-import { useGStore } from "@/app/store/store";
 import { Modal } from "./Modal";
+import { useAuthStore } from "@/app/store/authStore";
 
 export function NavigationBar() {
-  const { isConnected, walletAddress } = useGStore((state) => ({
+  const { isConnected, walletAddress } = useAuthStore((state) => ({
     isConnected: state.isConnected,
     walletAddress: state.walletAddress,
   }));

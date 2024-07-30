@@ -1,10 +1,28 @@
-"use client";
-
-import { useGStore } from "@/app/store/store";
+import { useAuthStore } from "@/app/store/authStore";
 import React, { useState, useEffect, useCallback } from "react";
-import { RpcProvider, Contract } from "starknet";
+import { RpcProvider, Contract, BigNumberish, num, Result } from "starknet";
 
-interface NFTData {
+const MGenesisAddress =
+  "0x007ca74fd0a9239678cc6355e38ac1e7820141501727ae37f9c733e5ed1c3592";
+const ALCHEMY_API_KEY = "k7qcr3I6vKHCjdIvLQnFq1DwvNSYqKmK";
+
+let provider: RpcProvider | undefined = undefined;
+let metacubContract: Contract | undefined = undefined;
+const generateProvider = async () => {
+  if (provider) return;
+  provider = new RpcProvider({
+    nodeUrl: `https://starknet-mainnet.g.alchemy.com/v2/${ALCHEMY_API_KEY}`,
+  });
+  const metacubeRootAbi = await provider.getClassAt(MGenesisAddress);
+  metacubContract = new Contract(
+    metacubeRootAbi.abi,
+    MGenesisAddress,
+    provider
+  );
+};
+generateProvider();
+
+interface nftdata {
   placeHolder?: boolean;
   name?: string;
   description?: string;
@@ -16,54 +34,32 @@ interface NFTData {
   }[];
 }
 
-const MGenesisAddress =
-  "0x007ca74fd0a9239678cc6355e38ac1e7820141501727ae37f9c733e5ed1c3592";
-let provider: RpcProvider | undefined;
-let metacubContract: Contract | undefined;
-
-const generateProvider = async () => {
-  if (provider) return;
-  provider = new RpcProvider({
-    nodeUrl:
-      "https://starknet-mainnet.g.alchemy.com/v2/k7qcr3I6vKHCjdIvLQnFq1DwvNSYqKmK",
-  });
-  const metacubeRootAbi = await provider.getClassAt(MGenesisAddress);
-  metacubContract = new Contract(
-    metacubeRootAbi.abi,
-    MGenesisAddress,
-    provider
-  );
-};
-generateProvider();
-
 let tokenIds: number[] = [];
-let nftsData: NFTData[] = [];
-let lastFetchedAddress = "";
+let nftsData: nftdata[] = [];
+let lastFetchedAdress = "";
 
-export function NFTGallery() {
-  const walletAddress = useGStore((state) => state.walletAddress);
-  const [nfts, setNfts] = useState<NFTData[]>([]);
+export const NFTGallery: React.FC = () => {
+  const walletAddress = useAuthStore((state) => state.walletAddress);
+  const isLogin = useAuthStore((state) => state.isConnected);
+  const [nfts, setNfts] = useState<nftdata[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const fetchNFTs = useCallback(async () => {
-    if (walletAddress.length < 5) return;
     setError(null);
-    setLoading(true);
 
+    if (walletAddress.length < 5) return;
     try {
       const totalNFTs = Number(
         await metacubContract?.call("balanceOf", [walletAddress])
       );
-      const sameUser = walletAddress === lastFetchedAddress;
-
+      const sameUser = walletAddress === lastFetchedAdress;
       if (!sameUser) nftsData = [];
       if ((nftsData.length === totalNFTs && sameUser) || totalNFTs === 0) {
         setNfts(nftsData);
         setLoading(false);
         return;
       }
-
       tokenIds = [];
       for (let i = 0; i < 75; i += 5) {
         const batch = Array.from({ length: 5 }, (_, index) => index + i);
@@ -72,11 +68,44 @@ export function NFTGallery() {
         if (tokenIds.length >= totalNFTs) break;
       }
 
-      const nftDetails = tokenIds.map(() => ({
-        animation_url: "https://felts.xyz/a/v.mp4",
-        image: "https://felts.xyz/a/g.gif",
-        name: "Genesis",
-      }));
+      // wait 1 seconds
+      // await new Promise((resolve) => setTimeout(resolve, 1000));
+      const nftDetails = tokenIds.map(() => {
+        return {
+          animation_url: "https://felts.xyz/a/v.mp4",
+          // attributes: [{ trait_type: "type", value: "card" }],
+          // 0: { trait_type: "type", value: "card" },
+          // description:
+          //   "The Metacube Genesis Card is the rarest item in the Metacube Universe. With only 75 units available, each one of these cards provides its owner with access to free in-game items and special advantages at the various Metacube events.",
+          image: "https://felts.xyz/a/g.gif",
+          name: "Genesis",
+        };
+      });
+
+      // tokenIds = [777];
+      // const nftDetails = tokenIds.map(() => {
+      //   return {
+      //     animation_url: nftImage,
+      //     // attributes: [{ trait_type: "type", value: "card" }],
+      //     // 0: { trait_type: "type", value: "card" },
+      //     // description:
+      //     //   "The Metacube Genesis Card is the rarest item in the Metacube Universe. With only 75 units available, each one of these cards provides its owner with access to free in-game items and special advantages at the various Metacube events.",
+      //     image: nftImage,
+      //     name: "Metacube: Pass Card",
+      //   };
+      // });
+      // }
+      // not needed as alway same URI but keep theem for future code
+      // const nftDetails = await Promise.all(
+      //   tokenIds.map(async (tokenId) => {
+      //     const uriResponse = await metacubContract?.call("tokenURI", [
+      //       tokenId,
+      //     ]);
+      //     const uriJson = feltToStr(uriResponse as bigint);
+      //     const metadataResponse = await axios.get(uriJson);
+      //     return metadataResponse.data;
+      //   })
+      // );
 
       setNfts(nftDetails);
       nftsData = nftDetails;
@@ -85,7 +114,7 @@ export function NFTGallery() {
       console.error(err);
     } finally {
       setLoading(false);
-      lastFetchedAddress = walletAddress;
+      lastFetchedAdress = walletAddress;
     }
   }, [walletAddress]);
 
@@ -93,61 +122,54 @@ export function NFTGallery() {
     fetchNFTs();
   }, [fetchNFTs]);
 
-  if (error) {
-    return (
-      <p className="text-red-500">
-        Oops! We couldn't load the NFTs. Please try again in a moment.
-      </p>
-    );
+  if (true) {
+    return <EmptyState message="Coming soon" />;
   }
 
-  if (!walletAddress || walletAddress.length <= 0) {
-    return (
-      <div className="h-[calc(100vh-300px)] flex items-center justify-center text-green-400 text-lg sm:text-xl">
-        Wallet is not connected
-      </div>
-    );
+  if (error) {
+    return <p className="text-red-500">Error: {error}</p>;
+  }
+
+  if (!isLogin) {
+    return <EmptyState message="Not logged in" />;
+  }
+
+  if (walletAddress.length <= 3) {
+    return <EmptyState message="Keep mining to get your first NFT!" />;
   }
 
   if (nfts.length === 0 && !loading) {
-    return (
-      <div className="h-[calc(100vh-300px)] flex items-center justify-center text-green-400 text-xl">
-        Hey soldier, keep mining to get your first NFT!
-      </div>
-    );
+    return <EmptyState message="Keep mining to get your first NFT!" />;
   }
 
   return <NFTGrid nfts={nfts} loading={loading} tokenIds={tokenIds} />;
-}
-
-async function processBatch(userAddress: string, batch: number[]) {
+};
+const processBatch = async (userAddress: string, batch: any[]) => {
   const checkOwnership = async (index: number) => {
     const ownerAddress = await metacubContract?.call("ownerOf", [index]);
-    const transformedAddress = `0x${ownerAddress?.toString(16)}`;
-    if (transformedAddress === userAddress && !tokenIds.includes(index)) {
-      tokenIds.push(index);
+    const transformedAdress = `0x${ownerAddress?.toString(16)}`;
+    if (transformedAdress === userAddress) {
+      //check if index is already in tokenIds
+      if (!tokenIds.includes(index)) {
+        tokenIds.push(index);
+      }
     }
   };
 
   const promises = batch.map((index) => checkOwnership(index));
   await Promise.all(promises);
-}
-
-function NFTGrid({
-  nfts,
-  loading,
-  tokenIds,
-}: {
-  nfts: NFTData[];
+};
+const NFTGrid: React.FC<{
+  nfts: nftdata[];
   loading: boolean;
   tokenIds: number[];
-}) {
-  const skeletonCount = 8;
-  const displayNfts = loading ? Array(skeletonCount).fill({}) : nfts;
+}> = React.memo(({ nfts, loading, tokenIds }) => {
+  const placeholders = Array(8).fill(null);
+  const items = loading ? placeholders : nfts;
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-      {displayNfts.map((nft, index) => (
+      {items.map((nft, index) => (
         <NFTCard
           key={index}
           nft={nft}
@@ -157,39 +179,44 @@ function NFTGrid({
       ))}
     </div>
   );
-}
+});
 
-function NFTCard({
-  nft,
-  loading,
-  tokenId,
-}: {
-  nft: NFTData;
+const NFTCard: React.FC<{
+  nft: nftdata | null;
   loading: boolean;
   tokenId?: number;
-}) {
-  if (loading) {
-    return (
-      <div className="bg-gray-800 rounded-lg overflow-hidden shadow-lg">
-        <div className="h-48 bg-gray-700 animate-pulse" />
-        <div className="p-4">
-          <div className="h-4 bg-gray-700 rounded animate-pulse" />
+}> = ({ nft, loading, tokenId }) => (
+  <div className="bg-white rounded-lg shadow-md overflow-hidden h-full">
+    {loading ? (
+      <NFTCardSkeleton />
+    ) : (
+      <>
+        <img
+          className="w-full h-48 object-cover shadow-lg"
+          src={nft?.image}
+          alt={nft?.name}
+        />
+        <div className="flex justify-between items-center bg-gray-800 bg-opacity-50 p-2">
+          <span className="text-white">{nft?.name}</span>
+          <span className="text-white">N°{tokenId}</span>
         </div>
-      </div>
-    );
-  }
+      </>
+    )}
+  </div>
+);
 
-  return (
-    <div className="bg-gray-800 rounded-lg overflow-hidden shadow-lg">
-      <img
-        src={nft.image}
-        alt={nft.name}
-        className="w-full h-48 object-cover"
-      />
-      <div className="p-4 flex justify-between items-center">
-        <span className="text-green-400">{nft.name}</span>
-        <span className="text-green-400">N°{tokenId}</span>
-      </div>
-    </div>
-  );
-}
+const NFTCardSkeleton: React.FC = () => (
+  <>
+    <div className=" h-40 bg-gray-300 animate-pulse" />
+    <div className="h-8 bg-gray-300 mt-2 animate-pulse" />
+  </>
+);
+
+const EmptyState: React.FC<{ message: string }> = ({ message }) => (
+  <div
+    className="absolute top-0 left-0 w-full flex justify-center items-center text-white text-center rounded-lg z-10 mt-40"
+    style={{ textShadow: "0px 0px 20px #737373" }}
+  >
+    <h6 className="text-3xl">{message}</h6>
+  </div>
+);

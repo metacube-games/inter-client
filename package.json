@@ -11,7 +11,7 @@
   "dependencies": {
     "@heroicons/react": "^2.1.5",
     "@react-oauth/google": "^0.12.1",
-    "@tanstack/react-virtual": "^3.8.3",
+    "@tanstack/react-virtual": "^3.8.4",
     "get-starknet": "^3.3.2",
     "ky": "^1.5.0",
     "next": "14.2.5",
