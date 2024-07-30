@@ -40,7 +40,7 @@ export const postConnectGoogle = (credential: string) =>
     })
     .json();
 
-export const disconnect = () => api.post("disconnect").json();
+export const disconnect = () => api.get("auth/disconnect").json();
 
 export const getNonce = (publicKey: string) => {
   if (!publicKey) {
@@ -50,7 +50,7 @@ export const getNonce = (publicKey: string) => {
 };
 
 export const getRefresh = (firstConnection: boolean) =>
-  api.get("refresh", { searchParams: { firstConnection } }).json();
+  api.get("auth/refresh", { searchParams: { firstConnection } }).json();
 
 export const handleApiError = (error: unknown) => {
   if (error instanceof ky.HTTPError) {
