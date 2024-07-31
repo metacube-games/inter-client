@@ -1,6 +1,7 @@
 import React, { useCallback, useRef } from "react";
 import { NFTGallery } from "./ModalContents/NFTGallery";
 import { StatsPanel } from "./ModalContents/StatsPanel";
+import ReactDOM from "react-dom";
 
 export function Modal({
   activeModal,
@@ -25,9 +26,11 @@ export function Modal({
 
   if (!activeModal) return null;
 
-  return (
+  //  creat portal on body for the modal
+
+  return ReactDOM.createPortal(
     <div
-      className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 backdrop-blur-sm"
+      className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-10 backdrop-blur-sm"
       onClick={handleClickOutside}
     >
       <div
@@ -58,7 +61,8 @@ export function Modal({
           <ModalContent modalType={activeModal} />
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
 

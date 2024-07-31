@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useCallback } from "react";
 import { GoogleLogin } from "@react-oauth/google";
 import toast, { Toaster } from "react-hot-toast";
 import { SAG, useAuthStore } from "@/app/store/authStore";
@@ -11,138 +11,101 @@ import {
   setAccessToken,
 } from "@/app/backendAPI/backendAPI";
 import { setPublicKeyFromCookies } from "@/app/utils/starknet";
+import ReactDOM from "react-dom";
 
 const REFRESH_INTERVAL = 270000;
 
 export function LoginButton() {
   const { open, handleOpen, handleClose } = useOpenConnexionModal();
-  const { isConnected, isAuthLoading, walletAddress, googleID } = useAuthStore(
-    (state) => ({
+  const { isConnected, isAuthLoading, walletAddress, googleID, username } =
+    useAuthStore((state) => ({
       isConnected: state.isConnected,
       isAuthLoading: state.isAuthLoading,
       walletAddress: state.walletAddress,
       googleID: state.googleId,
-    })
-  );
-  const intervalRef = useRef<any>(null);
+      username: state.username,
+    }));
 
   useEffect(() => {
+    let intervalId: any;
     if (isConnected) {
-      setupRefreshInterval();
+      intervalId = setInterval(() => {
+        getRefresh(false)
+          .then((data: any) => {
+            setPublicKeyFromCookies(data?.playerData?.publicKey);
+            setAccessToken(data?.accessToken);
+          })
+          .catch(console.error);
+      }, REFRESH_INTERVAL);
     }
-
-    return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
-    };
+    return () => clearInterval(intervalId);
   }, [isConnected]);
 
-  const setupRefreshInterval = () => {
-    if (intervalRef.current) return;
-
-    intervalRef.current = setInterval(() => {
-      getRefresh(false)
-        .then((data: any) => {
-          setPublicKeyFromCookies(data.playerData.publicKey);
-          setAccessToken(data.accessToken);
-        })
-        .catch((err: any) => console.log(err));
-    }, REFRESH_INTERVAL);
-  };
-
-  const handleLogout = async () => {
+  const handleLogout = useCallback(async () => {
     try {
       await disconnect();
       if (walletAddress) {
         await disconnectWallet();
       }
       SAG.reset();
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-        intervalRef.current = null;
-      }
     } catch (error) {
       console.error("Logout failed:", error);
       toast.error("Logout failed");
     }
-  };
+  }, [walletAddress]);
 
-  const handleAuth = async (authFunction: () => Promise<any>) => {
-    handleClose();
-    try {
-      SAG.setIsAuthLoading(true);
-      const authData = await authFunction();
-      SAG.setIsConnected(true);
+  const handleAuth = useCallback(
+    async (authFunction: () => any) => {
+      try {
+        SAG.setIsAuthLoading(true);
+        const authData = await authFunction();
+        SAG.setIsConnected(true);
 
-      if (authData) {
-        const pb = authData?.playerData?.publicKey;
-        if (!pb) throw new Error("Public key is required");
-        if (pb.startsWith("google")) {
-          SAG.setGoogleId(pb);
-        } else {
-          SAG.setWalletAddress(pb);
+        if (authData?.playerData?.publicKey) {
+          const pb = authData.playerData.publicKey;
+          SAG.setGoogleId(pb.startsWith("google") ? pb : null);
+          SAG.setWalletAddress(pb.startsWith("google") ? null : pb);
+          setAccessToken(authData.accessToken);
+          SAG.setUsername(authData.playerData.username);
+          SAG.setIsStarknetID(authData.playerData.username?.includes(".stark"));
         }
-        // SAG.setAccessToken(authData.accessToken);
-        setAccessToken(authData?.accessToken);
-        SAG.setUsername(authData?.playerData?.username);
-        SAG.setIsStarknetID(authData?.playerData?.username?.includes(".stark"));
-        setupRefreshInterval();
+      } catch (error) {
+        console.error("Login failed:", error);
+        toast.error("Login failed");
+      } finally {
+        handleClose();
+        SAG.setIsAuthLoading(false);
       }
-    } catch (error) {
-      console.error("Login failed:", error);
-      toast.error("Login failed");
-    } finally {
-      SAG.setIsAuthLoading(false);
-    }
-  };
+    },
+    [handleClose]
+  );
 
-  const handleWalletConnect = () => handleAuth(connectToStarknet);
-  const handleGoogleLogin = (credentialResponse: any) => {
-    if (credentialResponse.credential) {
-      handleAuth(() => postConnectGoogle(credentialResponse.credential));
-    }
-  };
+  const handleWalletConnect = useCallback(
+    () => handleAuth(connectToStarknet),
+    [handleAuth]
+  );
 
-  const displayContent = () => {
+  const handleGoogleLogin = useCallback(
+    (credentialResponse: { credential: string }) => {
+      if (credentialResponse.credential) {
+        handleAuth(() => postConnectGoogle(credentialResponse.credential));
+      }
+    },
+    [handleAuth]
+  );
+
+  const displayContent = useCallback(() => {
     if (isAuthLoading) {
-      return (
-        <svg
-          className="animate-spin h-5 w-5 text-green-400"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-        >
-          <circle
-            className="opacity-25"
-            cx="12"
-            cy="12"
-            r="10"
-            stroke="currentColor"
-            strokeWidth="4"
-          />
-          <path
-            className="opacity-75"
-            fill="currentColor"
-            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-          />
-        </svg>
-      );
+      return <LoadingSpinner />;
     }
-
     if (isConnected) {
-      const displayAddress =
-        walletAddress.length > 3 ? walletAddress : googleID;
-      if (displayAddress && displayAddress.length > 6) {
-        const first3 = displayAddress.slice(0, 3);
-        const last3 = displayAddress.slice(-3);
-        return `${first3}...${last3}`;
-      }
-      return displayAddress;
+      const displayAddress = walletAddress || googleID;
+      return displayAddress?.length > 6
+        ? `${displayAddress.slice(0, 3)}...${displayAddress.slice(-3)}`
+        : displayAddress;
     }
-
     return "Login";
-  };
+  }, [isAuthLoading, isConnected, walletAddress, googleID]);
 
   return (
     <>
@@ -154,28 +117,86 @@ export function LoginButton() {
       >
         {displayContent()}
       </button>
-      {open && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-black border border-green-400 p-6 rounded-lg shadow-xl">
-            <h2 className="text-2xl font-bold mb-4 text-green-400">Login</h2>
-            <div className="space-y-4">
-              <GoogleLogin
-                onSuccess={handleGoogleLogin}
-                onError={() => {
-                  console.error("Google Login Failed");
-                  toast.error("Google login failed");
-                }}
-              />
-              <button
-                onClick={handleWalletConnect}
-                className="w-full px-4 py-2 bg-green-400 text-black rounded hover:bg-green-500 transition duration-150 ease-in-out"
-              >
-                Connect with digital wallet
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {open &&
+        ReactDOM.createPortal(
+          <LoginModal
+            onClose={handleClose}
+            onGoogleLogin={handleGoogleLogin}
+            onWalletConnect={handleWalletConnect}
+          />,
+          document.body
+        )}
     </>
+  );
+}
+
+function LoginModal({
+  onClose,
+  onGoogleLogin,
+  onWalletConnect,
+}: {
+  onClose: () => void;
+  onGoogleLogin: (credentialResponse: { credential: string }) => void;
+  onWalletConnect: () => void;
+}) {
+  useEffect(() => {
+    const handleEscape = (event: { key: string }) => {
+      if (event.key === "Escape") {
+        onClose();
+      }
+    };
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
+  }, [onClose]);
+
+  return (
+    <div
+      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10"
+      onClick={onClose}
+    >
+      <div
+        className="bg-black border border-green-400 p-6 rounded-lg shadow-xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <h2 className="text-2xl font-bold mb-4 text-green-400">Login</h2>
+        <div className="space-y-4">
+          <GoogleLogin
+            onSuccess={onGoogleLogin as any}
+            onError={() => toast.error("Google login failed")}
+          />
+          <button
+            onClick={onWalletConnect}
+            className="w-full px-4 py-2 bg-green-400 text-black rounded hover:bg-green-500 transition duration-150 ease-in-out"
+          >
+            Connect with digital wallet
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function LoadingSpinner() {
+  return (
+    <svg
+      className="animate-spin h-5 w-5 text-green-400"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+    >
+      <circle
+        className="opacity-25"
+        cx="12"
+        cy="12"
+        r="10"
+        stroke="currentColor"
+        strokeWidth="4"
+      />
+      <path
+        className="opacity-75"
+        fill="currentColor"
+        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+      />
+    </svg>
   );
 }

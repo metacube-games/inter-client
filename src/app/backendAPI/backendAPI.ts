@@ -53,9 +53,11 @@ export const getRefresh = (firstConnection: boolean) =>
   api.get("auth/refresh", { searchParams: { firstConnection } }).json();
 
 export const handleApiError = (error: unknown) => {
-  if (error instanceof ky.HTTPError) {
+  if (error instanceof ky) {
     console.error(
-      `HTTP Error ${error.response.status}: ${error.response.statusText}`
+      `HTTP Error ${(error as any)?.response.status}: ${
+        (error as any)?.response.statusText
+      }`
     );
   } else if (error instanceof Error) {
     console.error("API Error:", error.message);
