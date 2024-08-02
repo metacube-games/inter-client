@@ -27,7 +27,7 @@ export function LoginButton() {
   );
 
   const intervalSettedRef = useRef<boolean>(false);
-  const intervalIDRef = useRef<Timer | null>(null);
+  const intervalIDRef = useRef<any | null>(null);
 
   const setupRefreshInterval = useCallback(() => {
     if (intervalIDRef.current !== null) return;
