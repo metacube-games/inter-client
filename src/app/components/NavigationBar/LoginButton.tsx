@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from "react";
+import React, { useEffect, useCallback, useRef } from "react";
 import { GoogleLogin } from "@react-oauth/google";
 import toast, { Toaster } from "react-hot-toast";
 import { SAG, useAuthStore } from "@/app/store/authStore";
@@ -14,7 +14,6 @@ import { setPublicKeyFromCookies } from "@/app/utils/starknet";
 import ReactDOM from "react-dom";
 
 const REFRESH_INTERVAL = 270000;
-let intervalId: any;
 
 export function LoginButton() {
   const { open, handleOpen, handleClose } = useOpenConnexionModal();
@@ -26,28 +25,45 @@ export function LoginButton() {
       address: state.address,
     })
   );
+  const intervalSettedRef = useRef<boolean>(false);
+  const intervalIDRef = useRef<Timer | null>(null);
+
+  const setupRefreshInterval = useCallback(() => {
+    if (intervalIDRef.current !== null) return;
+
+    intervalIDRef.current = setInterval(() => {
+      getRefresh(false)
+        .then((data: any) => {
+          setPublicKeyFromCookies(data.playerData.publicKey);
+          setAccessToken(data.accessToken);
+        })
+        .catch((err) => console.log(err));
+    }, REFRESH_INTERVAL);
+  }, []);
 
   useEffect(() => {
-    if (intervalId) return;
-
+    if (intervalSettedRef.current) return;
     getRefresh(true)
       .then((data: any) => {
-        setPublicKeyFromCookies(data?.playerData?.publicKey);
+        setPublicKeyFromCookies(data.playerData.publicKey);
         setInitialStates(data);
       })
-      .catch(console.error);
+      .catch((err) => console.log(err))
+      .finally(() => {
+        SAG.setIsAuthLoading(false);
+      });
+    if (isConnected) setupRefreshInterval();
+    intervalSettedRef.current = true;
+    SAG.setIsAuthLoading(true);
 
-    if (isConnected) {
-      intervalId = setInterval(() => {
-        getRefresh(false)
-          .then((data: any) => {
-            setPublicKeyFromCookies(data?.playerData?.publicKey);
-          })
-          .catch(console.error);
-      }, REFRESH_INTERVAL);
-    }
-    return () => clearInterval(intervalId);
-  }, [isConnected]);
+    return () => {
+      if (intervalIDRef.current !== null) {
+        clearInterval(intervalIDRef.current);
+        intervalIDRef.current = null;
+        SAG.setIsAuthLoading(false);
+      }
+    };
+  }, [setupRefreshInterval, intervalSettedRef]);
 
   const handleLogout = useCallback(async () => {
     try {
@@ -131,14 +147,13 @@ export function LoginButton() {
 function setInitialStates(authData: any) {
   SAG.setIsConnected(true);
   const pb = authData.playerData.publicKey;
+  setAccessToken(authData.accessToken);
 
   if (pb) {
     SAG.setIsConnected(true);
     SAG.setGoogleId(pb.startsWith("google") ? pb : "");
     SAG.setWalletAddress(pb.startsWith("google") ? "" : pb);
     SAG.setAddress(pb);
-    console.log(authData);
-    setAccessToken(authData.accessToken);
 
     SAG.setUsername(authData.playerData.username);
     SAG.setIsStarknetID(authData.playerData.username?.includes(".stark"));
