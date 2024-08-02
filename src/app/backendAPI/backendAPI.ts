@@ -34,7 +34,7 @@ export const postConnectGoogle = (credential: string) =>
     .json();
 
 export async function getRewardAddress() {
-  console.log(SAG.accessToken);
+  console.log(SAG.accessToken, "test");
   return api
     .get("profile/address", {
       headers: {

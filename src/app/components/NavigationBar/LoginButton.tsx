@@ -142,6 +142,7 @@ function setInitialStates(authData: any) {
     SAG.setGoogleId(pb.startsWith("google") ? pb : "");
     SAG.setWalletAddress(pb.startsWith("google") ? "" : pb);
     SAG.setAddress(pb);
+    console.log(authData);
     setAccessToken(authData.accessToken);
     SAG.setAccessToken(authData?.accessToken);
 
