@@ -1,3 +1,5 @@
+"use client";
+
 import ky from "ky";
 import { useAuthStore } from "../store/authStore";
 
