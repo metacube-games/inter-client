@@ -51,8 +51,13 @@ export const getNonce = (publicKey: string) => {
   return api.get("auth/nonce", { searchParams: { publicKey } }).json();
 };
 
-export const getRefresh = (firstConnection: boolean) =>
-  api.get("auth/refresh", { searchParams: { firstConnection } }).json();
+export const getRefresh = (reconnect: boolean) =>
+  api
+    .get("auth/refresh?", {
+      searchParams: { reconnect: reconnect.toString() },
+      credentials: "include",
+    })
+    .json();
 
 export const handleApiError = (error: unknown) => {
   if (error instanceof ky) {
