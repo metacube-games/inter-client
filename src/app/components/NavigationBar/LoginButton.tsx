@@ -25,6 +25,7 @@ export function LoginButton() {
       address: state.address,
     })
   );
+
   const intervalSettedRef = useRef<boolean>(false);
   const intervalIDRef = useRef<Timer | null>(null);
 
