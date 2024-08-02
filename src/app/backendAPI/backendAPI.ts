@@ -2,6 +2,7 @@ import ky from "ky";
 import { useAuthStore } from "../store/authStore";
 
 const BASE_URL = "https://api.metacube.games:8080/";
+let accessToken = "";
 
 const api = ky.create({
   prefixUrl: BASE_URL,
@@ -9,7 +10,6 @@ const api = ky.create({
   hooks: {
     beforeRequest: [
       (request) => {
-        const accessToken = useAuthStore.getState().accessToken;
         if (accessToken) {
           request.headers.set("Authorization", `Bearer ${accessToken}`);
         }
@@ -17,7 +17,6 @@ const api = ky.create({
     ],
   },
 });
-let accessToken = "";
 
 export function setAccessToken(token: string) {
   accessToken = token;
@@ -41,7 +40,7 @@ export const postConnectGoogle = (credential: string) =>
     .json();
 
 export async function getRewardAddress() {
-  api.get("profile/address", { json: { accessToken } }).json();
+  api.get("profile/address", {}).json();
 }
 
 export const disconnect = () => api.get("auth/disconnect").json();

@@ -54,7 +54,6 @@ export const NFTGallery: React.FC = () => {
 
     try {
       const rewardAddress = await getRewardAddress();
-      console.log(rewardAddress);
       const fRewardAddress = `0x${rewardAddress?.address}`;
       // "0x029aaeff147fcdd9fedecb94a6cf20c55022d7f8df66df4e9a8da4f0c7483261"; //
       setRewardAddress(fRewardAddress);

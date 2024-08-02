@@ -139,7 +139,6 @@ function setInitialStates(authData: any) {
     SAG.setGoogleId(pb.startsWith("google") ? pb : "");
     SAG.setWalletAddress(pb.startsWith("google") ? "" : pb);
     SAG.setAddress(pb);
-
     setAccessToken(authData.accessToken);
     SAG.setUsername(authData.playerData.username);
     SAG.setIsStarknetID(authData.playerData.username?.includes(".stark"));

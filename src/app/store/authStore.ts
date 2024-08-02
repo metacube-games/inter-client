@@ -10,7 +10,6 @@ interface AuthState {
   address: string;
   username: string;
   isStarknetID: boolean;
-  accessToken: string;
   publicKey: string;
 }
 
@@ -22,7 +21,6 @@ const initialState: AuthState = {
   address: "",
   username: "",
   isStarknetID: false,
-  accessToken: "",
   publicKey: "",
 };
 
