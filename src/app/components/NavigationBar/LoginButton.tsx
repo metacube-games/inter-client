@@ -34,6 +34,8 @@ export function LoginButton() {
       .then((data: any) => {
         setPublicKeyFromCookies(data?.playerData?.publicKey);
         setAccessToken(data?.accessToken);
+        SAG.setAccessToken(data?.accessToken);
+
         setInitialStates(data);
       })
       .catch(console.error);
@@ -44,6 +46,7 @@ export function LoginButton() {
           .then((data: any) => {
             setPublicKeyFromCookies(data?.playerData?.publicKey);
             setAccessToken(data?.accessToken);
+            SAG.setAccessToken(data?.accessToken);
           })
           .catch(console.error);
       }, REFRESH_INTERVAL);
@@ -140,6 +143,8 @@ function setInitialStates(authData: any) {
     SAG.setWalletAddress(pb.startsWith("google") ? "" : pb);
     SAG.setAddress(pb);
     setAccessToken(authData.accessToken);
+    SAG.setAccessToken(authData?.accessToken);
+
     SAG.setUsername(authData.playerData.username);
     SAG.setIsStarknetID(authData.playerData.username?.includes(".stark"));
   }

@@ -1,9 +1,9 @@
 "use client";
 
 import ky from "ky";
+import { SAG } from "../store/authStore";
 
 const BASE_URL = "https://api.metacube.games:8080/";
-let accessToken = "";
 
 const createApi = (token: string) =>
   ky.create({
@@ -13,7 +13,7 @@ const createApi = (token: string) =>
       beforeRequest: [
         (request) => {
           if (token) {
-            request.headers.set("Authorization", `Bearer ${token}`);
+            request.headers.set("Authorization", `Bearer ${SAG.accessToken}`);
           }
         },
       ],
@@ -23,8 +23,7 @@ const createApi = (token: string) =>
 let api = createApi("");
 
 export function setAccessToken(token: string) {
-  accessToken = token;
-  api = createApi(token);
+  api = createApi(SAG.accessToken);
 }
 
 export const getAllStatistics = () => api.get("info/stats").json();
