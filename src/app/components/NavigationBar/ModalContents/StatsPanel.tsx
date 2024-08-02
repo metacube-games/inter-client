@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect, useTransition } from "react";
 import { useVirtualizer } from "@tanstack/react-virtual";
-import { useGStore } from "@/app/store/store";
 import { getAllStatistics } from "@/app/backendAPI/backendAPI";
+import { useAuthStore } from "@/app/store/authStore";
 // import { getAllStatistics } from "@/app/backendAPI/backendAPI";
 interface IUserStats {
   cubes: number;
@@ -81,7 +81,7 @@ function StatsTable({
   playerStats: IUserStats[];
   searchTerm: string;
 }) {
-  const walletAddress = useGStore((state) => state.walletAddress);
+  const walletAddress = ""; //useAuthStore((state) => state.walletAddress);
   const [mergedStats, setMergedStats] = useState<IUserStats[]>([]);
 
   useEffect(() => {

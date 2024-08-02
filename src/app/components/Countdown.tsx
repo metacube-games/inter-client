@@ -24,8 +24,8 @@ export const Countdown = ({
   });
 
   useEffect(() => {
-    const targetDate = new Date(Date.UTC(2025, 5, 1, 16, 0, 0));
-    const targetFinishDate = new Date(Date.UTC(2025, 5, 2, 1, 0, 0));
+    const targetDate = new Date(Date.UTC(2024, 7, 3, 16, 0, 0));
+    const targetFinishDate = new Date(Date.UTC(2024, 8, 4, 1, 0, 0));
 
     const updateTimer = () => {
       const now = new Date().getTime();
@@ -83,9 +83,9 @@ export const Countdown = ({
           <TimeUnit key={unit} value={value} unit={unit} />
         ))}
       </div>
-      <p className="text-lg sm:text-xl mt-10 font-bold">
+      {/* <p className="text-lg sm:text-xl mt-10 font-bold">
         2500 beta NFTs will be hidden in the cubes!
-      </p>
+      </p> */}
     </div>
   );
 };
