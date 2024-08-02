@@ -51,6 +51,7 @@ export const NFTGallery: React.FC = () => {
   const [tokenIds, setTokenIds] = useState<number[]>([]);
 
   const fetchNFTs = useCallback(async () => {
+    if (!isLogin) return;
     setError(null);
     setLoading(true);
 
@@ -103,7 +104,7 @@ export const NFTGallery: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [isLogin]);
 
   useEffect(() => {
     fetchNFTs();
