@@ -53,7 +53,7 @@ export const getNonce = (publicKey: string) => {
 
 export const getRefresh = (reconnect: boolean) =>
   api
-    .get("auth/refresh?", {
+    .get("auth/refresh", {
       searchParams: { reconnect: reconnect.toString() },
       credentials: "include",
     })
