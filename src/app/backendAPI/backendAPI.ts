@@ -1,8 +1,7 @@
 "use client";
 
 import ky from "ky";
-import { SAG } from "../store/authStore";
-
+let accessToken = "";
 const BASE_URL = "https://api.metacube.games:8080/";
 
 const createApi = (token: string) =>
@@ -13,7 +12,7 @@ const createApi = (token: string) =>
 let api = createApi("");
 
 export function setAccessToken(token: string) {
-  api = createApi(SAG.accessToken);
+  accessToken = token;
 }
 
 export const getAllStatistics = () => api.get("info/stats").json();
@@ -34,11 +33,11 @@ export const postConnectGoogle = (credential: string) =>
     .json();
 
 export async function getRewardAddress() {
-  console.log(SAG.accessToken, "test");
+  console.log(accessToken, "test");
   return api
     .get("profile/address", {
       headers: {
-        Authorization: `Bearer ${SAG.accessToken}`,
+        Authorization: `Bearer ${accessToken}`,
       },
       credentials: "include",
     })
