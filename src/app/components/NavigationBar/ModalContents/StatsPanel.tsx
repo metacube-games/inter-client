@@ -81,13 +81,12 @@ function StatsTable({
   playerStats: IUserStats[];
   searchTerm: string;
 }) {
-  const isLogin = useAuthStore((state) => state.isConnected);
   const address = useAuthStore((state) => state.address);
   const [mergedStats, setMergedStats] = useState<IUserStats[]>([]);
 
   useEffect(() => {
     if (!playerStats?.length) return;
-    if (!isLogin || searchTerm.length > 0) {
+    if (true || !address || address.length <= 5 || searchTerm.length > 0) {
       setMergedStats(playerStats);
       return;
     }
@@ -97,7 +96,7 @@ function StatsTable({
       stats.rank = index + 1;
       setMergedStats([stats, ...playerStats]);
     }
-  }, [address, playerStats, searchTerm, isLogin]);
+  }, [address, playerStats, searchTerm]);
 
   const filteredPlayers = mergedStats.filter(
     (player) =>
