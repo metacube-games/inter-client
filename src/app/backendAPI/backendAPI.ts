@@ -44,9 +44,14 @@ export const postConnectGoogle = (credential: string) =>
     .json();
 
 export async function getRewardAddress() {
-  api.get("profile/address").json();
+  return api
+    .get("profile/address", {
+      headers: {
+        Authorization: `Bearer ${SAG.accessToken}`,
+      },
+    })
+    .json();
 }
-
 export const disconnect = () => api.get("auth/disconnect").json();
 
 export const getNonce = (publicKey: string) => {
