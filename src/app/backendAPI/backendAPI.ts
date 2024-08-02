@@ -8,16 +8,6 @@ const BASE_URL = "https://api.metacube.games:8080/";
 const createApi = (token: string) =>
   ky.create({
     prefixUrl: BASE_URL,
-    credentials: "include",
-    hooks: {
-      beforeRequest: [
-        (request) => {
-          if (token) {
-            request.headers.set("Authorization", `Bearer ${SAG.accessToken}`);
-          }
-        },
-      ],
-    },
   });
 
 let api = createApi("");
@@ -44,11 +34,13 @@ export const postConnectGoogle = (credential: string) =>
     .json();
 
 export async function getRewardAddress() {
+  console.log(SAG.accessToken);
   return api
     .get("profile/address", {
       headers: {
         Authorization: `Bearer ${SAG.accessToken}`,
       },
+      credentials: "include",
     })
     .json();
 }
