@@ -20,7 +20,7 @@ let api = ky.create({
 
 export function setAccessToken(token: string) {
   accessToken = token;
-  api = ky.create({
+  api.create({
     prefixUrl: BASE_URL,
     credentials: "include", // This is equivalent to withCredentials: true
     hooks: {
@@ -32,7 +32,7 @@ export function setAccessToken(token: string) {
         },
       ],
     },
-  });
+  })
 }
 
 export const getAllStatistics = () => api.get("info/stats").json();
@@ -53,7 +53,7 @@ export const postConnectGoogle = (credential: string) =>
     .json();
 
 export async function getRewardAddress() {
-  api.get("profile/address", {}).json();
+  api.get("profile/address", {})..json();
 }
 
 export const disconnect = () => api.get("auth/disconnect").json();
