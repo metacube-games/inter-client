@@ -8,7 +8,7 @@ let api: any;
 
 export function setAccessToken(token: string) {
   accessToken = token;
-  ky.create({
+  api = ky.create({
     prefixUrl: BASE_URL,
     credentials: "include", // This is equivalent to withCredentials: true
     hooks: {
