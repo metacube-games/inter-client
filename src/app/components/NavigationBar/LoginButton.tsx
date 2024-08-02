@@ -14,20 +14,30 @@ import { setPublicKeyFromCookies } from "@/app/utils/starknet";
 import ReactDOM from "react-dom";
 
 const REFRESH_INTERVAL = 270000;
+let intervalId: any;
 
 export function LoginButton() {
   const { open, handleOpen, handleClose } = useOpenConnexionModal();
-  const { isConnected, isAuthLoading, walletAddress, googleID, username } =
-    useAuthStore((state) => ({
+  const { isConnected, isAuthLoading, address, walletAddress } = useAuthStore(
+    (state) => ({
       isConnected: state.isConnected,
       isAuthLoading: state.isAuthLoading,
       walletAddress: state.walletAddress,
-      googleID: state.googleId,
-      username: state.username,
-    }));
+      address: state.address,
+    })
+  );
 
   useEffect(() => {
-    let intervalId: any;
+    if (intervalId) return;
+
+    getRefresh(true)
+      .then((data: any) => {
+        setPublicKeyFromCookies(data?.playerData?.publicKey);
+        setAccessToken(data?.accessToken);
+        setInitialStates(data);
+      })
+      .catch(console.error);
+
     if (isConnected) {
       intervalId = setInterval(() => {
         getRefresh(false)
@@ -59,16 +69,7 @@ export function LoginButton() {
       try {
         SAG.setIsAuthLoading(true);
         const authData = await authFunction();
-        SAG.setIsConnected(true);
-
-        if (authData?.playerData?.publicKey) {
-          const pb = authData.playerData.publicKey;
-          SAG.setGoogleId(pb.startsWith("google") ? pb : null);
-          SAG.setWalletAddress(pb.startsWith("google") ? null : pb);
-          setAccessToken(authData.accessToken);
-          SAG.setUsername(authData.playerData.username);
-          SAG.setIsStarknetID(authData.playerData.username?.includes(".stark"));
-        }
+        setInitialStates(authData);
       } catch (error) {
         console.error("Login failed:", error);
         toast.error("Login failed");
@@ -99,13 +100,12 @@ export function LoginButton() {
       return <LoadingSpinner />;
     }
     if (isConnected) {
-      const displayAddress = walletAddress || googleID;
-      return displayAddress?.length > 6
-        ? `${displayAddress.slice(0, 3)}...${displayAddress.slice(-3)}`
-        : displayAddress;
+      return address?.length > 6
+        ? `${address.slice(0, 3)}...${address.slice(-2)}`
+        : address;
     }
     return "Login";
-  }, [isAuthLoading, isConnected, walletAddress, googleID]);
+  }, [isAuthLoading, isConnected, address]);
 
   return (
     <>
@@ -128,6 +128,22 @@ export function LoginButton() {
         )}
     </>
   );
+}
+
+function setInitialStates(authData: any) {
+  SAG.setIsConnected(true);
+  const pb = authData.playerData.publicKey;
+
+  if (pb) {
+    SAG.setIsConnected(true);
+    SAG.setGoogleId(pb.startsWith("google") ? pb : "");
+    SAG.setWalletAddress(pb.startsWith("google") ? "" : pb);
+    SAG.setAddress(pb);
+
+    setAccessToken(authData.accessToken);
+    SAG.setUsername(authData.playerData.username);
+    SAG.setIsStarknetID(authData.playerData.username?.includes(".stark"));
+  }
 }
 
 function LoginModal({

@@ -34,7 +34,7 @@ export function StatsPanel() {
   useEffect(() => {
     const getStats = async () => {
       const players = (await getAllStatistics()) as any;
-      const playersArray = Object.entries(players.statistics).map(
+      const playersArray = Object.entries(players?.statistics).map(
         ([id, player]) => ({ ...(player as IUserStats), id })
       );
       playersArray.forEach((player) => {
@@ -81,25 +81,23 @@ function StatsTable({
   playerStats: IUserStats[];
   searchTerm: string;
 }) {
-  const walletAddress = ""; //useAuthStore((state) => state.walletAddress);
+  const isLogin = useAuthStore((state) => state.isConnected);
+  const address = useAuthStore((state) => state.address);
   const [mergedStats, setMergedStats] = useState<IUserStats[]>([]);
 
   useEffect(() => {
     if (!playerStats?.length) return;
-    if (!walletAddress || walletAddress.length <= 0 || searchTerm.length > 0) {
+    if (!isLogin || searchTerm.length > 0) {
       setMergedStats(playerStats);
       return;
     }
-    const walletAddressFormatted = "0" + walletAddress?.slice(2);
-    const index = playerStats.findIndex(
-      (player) => player.id === walletAddressFormatted
-    );
+    const index = playerStats.findIndex((player) => player.id === address);
     const stats = playerStats[index];
     if (stats) {
       stats.rank = index + 1;
       setMergedStats([stats, ...playerStats]);
     }
-  }, [walletAddress, playerStats, searchTerm]);
+  }, [address, playerStats, searchTerm, isLogin]);
 
   const filteredPlayers = mergedStats.filter(
     (player) =>

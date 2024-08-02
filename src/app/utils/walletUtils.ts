@@ -20,14 +20,13 @@ export async function connectToStarknet() {
     const address = connection.selectedAddress || connection.account.address;
     setPublicKey(connection);
 
-    const nonceData = await getNonce(getPublicKey());
-    const signature = await signMessage(connection, nonceData.nonce);
+    const nonceData = (await getNonce(getPublicKey())) as any;
+    const signature = await signMessage(connection, nonceData?.nonce);
 
     if (signature.length !== 3) {
       signature.unshift(0);
     }
 
-    SAG.setWalletAddress(address);
     const data = await postConnect(getPublicKey(), signature[1], signature[2]);
     return data;
   }

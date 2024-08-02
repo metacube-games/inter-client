@@ -40,6 +40,10 @@ export const postConnectGoogle = (credential: string) =>
     })
     .json();
 
+export async function getRewardAddress() {
+  api.get("profile/address", {}).json();
+}
+
 export const disconnect = () => api.get("auth/disconnect").json();
 
 export const getNonce = (publicKey: string) => {
