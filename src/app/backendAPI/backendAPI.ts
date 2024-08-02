@@ -32,7 +32,7 @@ export function setAccessToken(token: string) {
         },
       ],
     },
-  })
+  });
 }
 
 export const getAllStatistics = () => api.get("info/stats").json();
@@ -53,7 +53,7 @@ export const postConnectGoogle = (credential: string) =>
     .json();
 
 export async function getRewardAddress() {
-  api.get("profile/address", {})..json();
+  api.get("profile/address", {}).json();
 }
 
 export const disconnect = () => api.get("auth/disconnect").json();
