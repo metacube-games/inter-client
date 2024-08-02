@@ -4,7 +4,19 @@ import { useAuthStore } from "../store/authStore";
 const BASE_URL = "https://api.metacube.games:8080/";
 let accessToken = "";
 
-let api: any;
+let api = ky.create({
+  prefixUrl: BASE_URL,
+  credentials: "include", // This is equivalent to withCredentials: true
+  hooks: {
+    beforeRequest: [
+      (request) => {
+        if (accessToken.length > 0) {
+          request.headers.set("Authorization", `Bearer ${accessToken}`);
+        }
+      },
+    ],
+  },
+});
 
 export function setAccessToken(token: string) {
   accessToken = token;
