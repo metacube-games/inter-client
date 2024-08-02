@@ -10,4 +10,6 @@ COPY . .
 
 RUN bun install
 
-ENTRYPOINT ["bun", "dev"]
+RUN bun build
+
+ENTRYPOINT ["bun", "start"]
