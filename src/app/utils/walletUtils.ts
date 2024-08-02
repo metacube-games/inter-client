@@ -26,6 +26,10 @@ export async function connectToStarknet() {
     if (signature.length !== 3) {
       signature.unshift(0);
     }
+    if (signature.length === 5) {
+      signature[1] = signature[1] + '|' + signature[2];
+      signature[2] = signature[3] + '|' + signature[4];
+    }
 
     const data = await postConnect(getPublicKey(), signature[1], signature[2]);
     return data;
