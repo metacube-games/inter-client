@@ -1,28 +1,36 @@
-import { useAuthStore } from "@/app/store/authStore";
+"use client";
+
 import React, { useState, useEffect, useCallback } from "react";
-import { RpcProvider, Contract, BigNumberish, num, Result } from "starknet";
+import { RpcProvider, Contract } from "starknet";
+// import { getRewardAddress } from "../../../API/backendAPI";
+import { useAuthStore } from "@/app/store/authStore";
+import { getRewardAddress } from "@/app/backendAPI/backendAPI";
 
 const MGenesisAddress =
   "0x007ca74fd0a9239678cc6355e38ac1e7820141501727ae37f9c733e5ed1c3592";
-const ALCHEMY_API_KEY = "k7qcr3I6vKHCjdIvLQnFq1DwvNSYqKmK";
+const MGPASSCARD =
+  "0x0602c301f6a1c2ef174bafaab7389c3f6165df34736befcf2ca3df7764934caf";
 
 let provider: RpcProvider | undefined = undefined;
-let metacubContract: Contract | undefined = undefined;
+let metacubeContract: Contract | undefined = undefined;
+let metacubePSContract: Contract | undefined = undefined;
+
 const generateProvider = async () => {
   if (provider) return;
   provider = new RpcProvider({
-    nodeUrl: `https://starknet-mainnet.g.alchemy.com/v2/${ALCHEMY_API_KEY}`,
+    nodeUrl: "https://starknet-mainnet.public.blastapi.io/rpc/v0_7",
   });
   const metacubeRootAbi = await provider.getClassAt(MGenesisAddress);
-  metacubContract = new Contract(
+  metacubeContract = new Contract(
     metacubeRootAbi.abi,
     MGenesisAddress,
     provider
   );
+  metacubePSContract = new Contract(metacubeRootAbi.abi, MGPASSCARD, provider);
 };
 generateProvider();
 
-interface nftdata {
+interface NFTData {
   placeHolder?: boolean;
   name?: string;
   description?: string;
@@ -34,133 +42,116 @@ interface nftdata {
   }[];
 }
 
-let tokenIds: number[] = [];
-let nftsData: nftdata[] = [];
-let lastFetchedAdress = "";
-
 export const NFTGallery: React.FC = () => {
-  const walletAddress = useAuthStore((state) => state.walletAddress);
   const isLogin = useAuthStore((state) => state.isConnected);
-  const [nfts, setNfts] = useState<nftdata[]>([]);
+  const [nfts, setNfts] = useState<NFTData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [rewardAddress, setRewardAddress] = useState("");
+  const [tokenIds, setTokenIds] = useState<number[]>([]);
 
   const fetchNFTs = useCallback(async () => {
     setError(null);
+    setLoading(true);
 
-    if (walletAddress.length < 5) return;
     try {
-      const totalNFTs = Number(
-        await metacubContract?.call("balanceOf", [walletAddress])
-      );
-      const sameUser = walletAddress === lastFetchedAdress;
-      if (!sameUser) nftsData = [];
-      if ((nftsData.length === totalNFTs && sameUser) || totalNFTs === 0) {
-        setNfts(nftsData);
+      const rewardAddress = (await getRewardAddress()) as any;
+      const fRewardAddress = `0x${rewardAddress?.address}`;
+      // "0x029aaeff147fcdd9fedecb94a6cf20c55022d7f8df66df4e9a8da4f0c7483261"; //
+      setRewardAddress(fRewardAddress);
+
+      if (fRewardAddress.length < 5 || !isLogin) {
         setLoading(false);
         return;
       }
-      tokenIds = [];
-      for (let i = 0; i < 75; i += 5) {
-        const batch = Array.from({ length: 5 }, (_, index) => index + i);
-        await new Promise((resolve) => setTimeout(resolve, 100));
-        await processBatch(walletAddress, batch);
-        if (tokenIds.length >= totalNFTs) break;
+
+      const totGNFTS = Number(
+        await metacubeContract?.call("balanceOf", [fRewardAddress])
+      );
+      const totPSNFTS = Number(
+        await metacubePSContract?.call("balanceOf", [fRewardAddress])
+      );
+      const totalNFTs = totGNFTS + totPSNFTS;
+
+      if (totalNFTs === 0) {
+        setNfts([]);
+        setLoading(false);
+        return;
       }
 
-      // wait 1 seconds
-      // await new Promise((resolve) => setTimeout(resolve, 1000));
-      const nftDetails = tokenIds.map(() => {
-        return {
-          animation_url: "https://felts.xyz/a/v.mp4",
-          // attributes: [{ trait_type: "type", value: "card" }],
-          // 0: { trait_type: "type", value: "card" },
-          // description:
-          //   "The Metacube Genesis Card is the rarest item in the Metacube Universe. With only 75 units available, each one of these cards provides its owner with access to free in-game items and special advantages at the various Metacube events.",
-          image: "https://felts.xyz/a/g.gif",
-          name: "Genesis",
-        };
-      });
+      const genesisIds = Array.from({ length: totGNFTS }, (_, index) => index);
+      const passIds = Array.from({ length: totPSNFTS }, (_, index) => index);
 
-      // tokenIds = [777];
-      // const nftDetails = tokenIds.map(() => {
-      //   return {
-      //     animation_url: nftImage,
-      //     // attributes: [{ trait_type: "type", value: "card" }],
-      //     // 0: { trait_type: "type", value: "card" },
-      //     // description:
-      //     //   "The Metacube Genesis Card is the rarest item in the Metacube Universe. With only 75 units available, each one of these cards provides its owner with access to free in-game items and special advantages at the various Metacube events.",
-      //     image: nftImage,
-      //     name: "Metacube: Pass Card",
-      //   };
-      // });
-      // }
-      // not needed as alway same URI but keep theem for future code
-      // const nftDetails = await Promise.all(
-      //   tokenIds.map(async (tokenId) => {
-      //     const uriResponse = await metacubContract?.call("tokenURI", [
-      //       tokenId,
-      //     ]);
-      //     const uriJson = feltToStr(uriResponse as bigint);
-      //     const metadataResponse = await axios.get(uriJson);
-      //     return metadataResponse.data;
-      //   })
-      // );
+      const nftGenesis = genesisIds.map(() => ({
+        animation_url: "https://felts.xyz/a/v.mp4",
+        image: "https://felts.xyz/a/g.gif",
+        name: "Genesis",
+      }));
 
+      const nftPass = passIds.map(() => ({
+        animation_url: "https://felts.xyz/a/p.mp4",
+        image: "https://felts.xyz/a/p.gif",
+        name: "Passcard",
+      }));
+
+      const nftDetails = [...nftGenesis, ...nftPass];
       setNfts(nftDetails);
-      nftsData = nftDetails;
+      setTokenIds([...genesisIds, ...passIds]);
     } catch (err) {
       setError("Failed to fetch NFTs.");
       console.error(err);
     } finally {
       setLoading(false);
-      lastFetchedAdress = walletAddress;
     }
-  }, [walletAddress]);
+  }, []);
 
   useEffect(() => {
     fetchNFTs();
   }, [fetchNFTs]);
 
-  if (true) {
-    return <EmptyState message="Coming soon" />;
-  }
-
   if (error) {
-    return <p className="text-red-500">Error: {error}</p>;
+    return (
+      <p className="text-red-500 text-center">
+        Oops! We couldn't load the NFTs. Please try again in a moment.
+      </p>
+    );
   }
 
   if (!isLogin) {
-    return <EmptyState message="Not logged in" />;
+    return (
+      <div className="h-[700px] flex items-center justify-center">
+        <p className="text-white text-2xl text-center">
+          Login to see your NFTs
+        </p>
+      </div>
+    );
   }
 
-  if (walletAddress.length <= 3) {
-    return <EmptyState message="Keep mining to get your first NFT!" />;
+  if (isLogin && rewardAddress?.length < 5) {
+    return (
+      <div className="h-[700px] flex items-center justify-center">
+        <p className="text-white text-2xl text-center">
+          You need to link a wallet to see your NFTs
+        </p>
+      </div>
+    );
   }
 
   if (nfts.length === 0 && !loading) {
-    return <EmptyState message="Keep mining to get your first NFT!" />;
+    return (
+      <div className="h-[700px] flex items-center justify-center">
+        <p className="text-white text-2xl text-center">
+          Hey soldier, keep mining to get your first NFT!
+        </p>
+      </div>
+    );
   }
 
   return <NFTGrid nfts={nfts} loading={loading} tokenIds={tokenIds} />;
 };
-const processBatch = async (userAddress: string, batch: any[]) => {
-  const checkOwnership = async (index: number) => {
-    const ownerAddress = await metacubContract?.call("ownerOf", [index]);
-    const transformedAdress = `0x${ownerAddress?.toString(16)}`;
-    if (transformedAdress === userAddress) {
-      //check if index is already in tokenIds
-      if (!tokenIds.includes(index)) {
-        tokenIds.push(index);
-      }
-    }
-  };
 
-  const promises = batch.map((index) => checkOwnership(index));
-  await Promise.all(promises);
-};
 const NFTGrid: React.FC<{
-  nfts: nftdata[];
+  nfts: NFTData[];
   loading: boolean;
   tokenIds: number[];
 }> = React.memo(({ nfts, loading, tokenIds }) => {
@@ -182,13 +173,15 @@ const NFTGrid: React.FC<{
 });
 
 const NFTCard: React.FC<{
-  nft: nftdata | null;
+  nft: NFTData | null;
   loading: boolean;
   tokenId?: number;
 }> = ({ nft, loading, tokenId }) => (
-  <div className="bg-white rounded-lg shadow-md overflow-hidden h-full">
+  <div className="w-full aspect-auto rounded-lg shadow-md overflow-hidden">
     {loading ? (
-      <NFTCardSkeleton />
+      <div className="w-f$ h-48 flex items-center justify-center bg-gray-900">
+        <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-green-900"></div>
+      </div>
     ) : (
       <>
         <img
@@ -202,21 +195,5 @@ const NFTCard: React.FC<{
         </div>
       </>
     )}
-  </div>
-);
-
-const NFTCardSkeleton: React.FC = () => (
-  <>
-    <div className=" h-40 bg-gray-300 animate-pulse" />
-    <div className="h-8 bg-gray-300 mt-2 animate-pulse" />
-  </>
-);
-
-const EmptyState: React.FC<{ message: string }> = ({ message }) => (
-  <div
-    className="absolute top-0 left-0 w-full flex justify-center items-center text-white text-center rounded-lg z-10 mt-40"
-    style={{ textShadow: "0px 0px 20px #737373" }}
-  >
-    <h6 className="text-3xl">{message}</h6>
   </div>
 );

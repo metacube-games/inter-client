@@ -8,11 +8,6 @@ import { Modal } from "./Modal";
 import { useAuthStore } from "@/app/store/authStore";
 
 export function NavigationBar() {
-  const { isConnected, walletAddress } = useAuthStore((state) => ({
-    isConnected: state.isConnected,
-    walletAddress: state.walletAddress,
-  }));
-
   const [activeModal, setActiveModal] = useState<string | null>(null);
 
   return (
@@ -24,7 +19,7 @@ export function NavigationBar() {
       </Link>
       <div className="flex items-center space-x-4">
         <MenuItems setActiveModal={setActiveModal} />
-        <LoginButton isConnected={isConnected} walletAddress={walletAddress} />
+        <LoginButton />
       </div>
       <Modal activeModal={activeModal} onClose={() => setActiveModal(null)} />
     </nav>

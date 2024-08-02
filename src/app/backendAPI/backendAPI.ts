@@ -1,26 +1,29 @@
+"use client";
+
 import ky from "ky";
-import { useAuthStore } from "../store/authStore";
+import { SAG } from "../store/authStore";
 
 const BASE_URL = "https://api.metacube.games:8080/";
 
-const api = ky.create({
-  prefixUrl: BASE_URL,
-  credentials: "include", // This is equivalent to withCredentials: true
-  hooks: {
-    beforeRequest: [
-      (request) => {
-        const accessToken = useAuthStore.getState().accessToken;
-        if (accessToken) {
-          request.headers.set("Authorization", `Bearer ${accessToken}`);
-        }
-      },
-    ],
-  },
-});
-let accessToken = "";
+const createApi = (token: string) =>
+  ky.create({
+    prefixUrl: BASE_URL,
+    credentials: "include",
+    hooks: {
+      beforeRequest: [
+        (request) => {
+          if (token) {
+            request.headers.set("Authorization", `Bearer ${SAG.accessToken}`);
+          }
+        },
+      ],
+    },
+  });
+
+let api = createApi("");
 
 export function setAccessToken(token: string) {
-  accessToken = token;
+  api = createApi(SAG.accessToken);
 }
 
 export const getAllStatistics = () => api.get("info/stats").json();
@@ -40,6 +43,15 @@ export const postConnectGoogle = (credential: string) =>
     })
     .json();
 
+export async function getRewardAddress() {
+  return api
+    .get("profile/address", {
+      headers: {
+        Authorization: `Bearer ${SAG.accessToken}`,
+      },
+    })
+    .json();
+}
 export const disconnect = () => api.get("auth/disconnect").json();
 
 export const getNonce = (publicKey: string) => {

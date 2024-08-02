@@ -7,10 +7,11 @@ interface AuthState {
   isAuthLoading: boolean;
   walletAddress: string;
   googleId: string;
+  address: string;
   username: string;
   isStarknetID: boolean;
-  accessToken: string;
   publicKey: string;
+  accessToken: string;
 }
 
 const initialState: AuthState = {
@@ -18,10 +19,11 @@ const initialState: AuthState = {
   isAuthLoading: false,
   walletAddress: "",
   googleId: "",
+  address: "",
   username: "",
   isStarknetID: false,
-  accessToken: "",
   publicKey: "",
+  accessToken: "",
 };
 
 type SetterActions = {

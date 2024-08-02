@@ -57,7 +57,7 @@ export function Modal({
           </svg>
         </button>
         <h2 className="text-2xl font-bold mb-4">{activeModal}</h2>
-        <div className="flex-grow overflow-auto min-w-[300px] stable-scrollbar">
+        <div className="flex-grow overflow-auto min-w-[300px] stable-scrollbar  ">
           <ModalContent modalType={activeModal} />
         </div>
       </div>
@@ -70,7 +70,7 @@ function ModalContent({ modalType }: { modalType: string }) {
   switch (modalType) {
     case "NFTs":
       return (
-        <div className="w-[800px] max-w-[90vw] ">
+        <div className="w-[800px] max-w-[50vw] ">
           <NFTGallery />
         </div>
       );
