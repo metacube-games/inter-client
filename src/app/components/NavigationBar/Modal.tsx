@@ -35,7 +35,7 @@ export function Modal({
     >
       <div
         ref={modalRef}
-        className="bg-black bg-opacity-90 text-green-400 p-6 rounded-lg border border-green-400 h-[95vh] w-auto max-w-[90vw] flex flex-col relative"
+        className="bg-black bg-opacity-90 text-green-400 p-6 rounded-lg border border-green-400 h-[90vh] w-auto max-w-[90vw] flex flex-col relative"
       >
         <button
           onClick={onClose}
