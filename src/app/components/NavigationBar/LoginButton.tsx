@@ -86,8 +86,7 @@ export function LoginButton() {
         const authData = await authFunction();
         setInitialStates(authData);
       } catch (error) {
-        console.error("Login failed:", error);
-        toast.error("Login failed");
+        handleAuthenticationError(error);
       } finally {
         handleClose();
         SAG.setIsAuthLoading(false);
@@ -230,4 +229,20 @@ function LoadingSpinner() {
       />
     </svg>
   );
+}
+
+function handleAuthenticationError(err: any) {
+  if (err.response?.status === 403) {
+    toast.error("You are banned");
+    window.document.exitPointerLock();
+  } else if (err.response?.status === 404) {
+    toast.error("Please deploy your walllet first");
+  } else if (err.response?.status === 401) {
+    toast.error(
+      "Issue verifying signature, if yous jsut deployed your wallet, please wait a few minutes, and try again"
+    );
+  } else {
+    toast.error("Unexpected error occurred");
+    console.log("Unexpected error:", err);
+  }
 }
