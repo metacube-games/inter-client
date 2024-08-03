@@ -113,7 +113,7 @@ export const NFTGallery: React.FC = () => {
   if (error) {
     return (
       <p className="text-red-500 text-center">
-        Oops! We couldn't load the NFTs. Please try again in a moment.
+        Oops! We couldn't load the Assets. Please try again in a moment.
       </p>
     );
   }
@@ -122,7 +122,7 @@ export const NFTGallery: React.FC = () => {
     return (
       <div className="h-[700px] flex items-center justify-center">
         <p className="text-white text-2xl text-center">
-          Login to see your NFTs
+          Login to see your Assets
         </p>
       </div>
     );
@@ -132,7 +132,7 @@ export const NFTGallery: React.FC = () => {
     return (
       <div className="h-[700px] flex items-center justify-center">
         <p className="text-white text-2xl text-center">
-          You need to link a wallet to see your NFTs
+          You need to link a wallet to see your Assets
         </p>
       </div>
     );
@@ -142,7 +142,7 @@ export const NFTGallery: React.FC = () => {
     return (
       <div className="h-[700px] flex items-center justify-center">
         <p className="text-white text-2xl text-center">
-          Hey soldier, keep mining to get your first NFT!
+          Hey soldier, keep mining to get your first Asset!
         </p>
       </div>
     );

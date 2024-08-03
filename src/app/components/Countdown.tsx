@@ -60,7 +60,7 @@ export const Countdown = ({
           the next event!
         </h1>
         <h2 className="text-lg sm:text-xl font-bold mb-0 text-green-400">
-          If you won NFTs, they should appear soon in your wallet and you will
+          If you won Assets, they should appear soon in your wallet and you will
           be able to trade them on{" "}
           <Link
             href="https://element.market/collections/metacube-passcards?search[toggles][0]=ALL"
@@ -84,7 +84,7 @@ export const Countdown = ({
         ))}
       </div>
       {/* <p className="text-lg sm:text-xl mt-10 font-bold">
-        2500 beta NFTs will be hidden in the cubes!
+        2500 beta Assets will be hidden in the cubes!
       </p> */}
     </div>
   );

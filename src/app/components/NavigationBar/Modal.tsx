@@ -68,7 +68,7 @@ export function Modal({
 
 function ModalContent({ modalType }: { modalType: string }) {
   switch (modalType) {
-    case "NFTs":
+    case "Assets":
       return (
         <div className="w-[800px] max-w-[50vw] ">
           <NFTGallery />

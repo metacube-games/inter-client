@@ -5,7 +5,7 @@ import {
 } from "@heroicons/react/24/outline";
 
 const menuItems = [
-  { name: "NFTs", icon: BuildingStorefrontIcon },
+  { name: "Assets", icon: BuildingStorefrontIcon },
   { name: "Stats", icon: ChartBarIcon },
 ];
 
