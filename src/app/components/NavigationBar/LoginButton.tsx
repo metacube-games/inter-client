@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from "react";
+import React, { useEffect, useCallback, useRef } from "react";
 import { GoogleLogin } from "@react-oauth/google";
 import toast, { Toaster } from "react-hot-toast";
 import { SAG, useAuthStore } from "@/app/store/authStore";
@@ -14,7 +14,6 @@ import { setPublicKeyFromCookies } from "@/app/utils/starknet";
 import ReactDOM from "react-dom";
 
 const REFRESH_INTERVAL = 270000;
-let intervalId: any;
 
 export function LoginButton() {
   const { open, handleOpen, handleClose } = useOpenConnexionModal();
@@ -27,32 +26,45 @@ export function LoginButton() {
     })
   );
 
-  useEffect(() => {
-    if (intervalId) return;
+  const intervalSettedRef = useRef<boolean>(false);
+  const intervalIDRef = useRef<any | null>(null);
 
+  const setupRefreshInterval = useCallback(() => {
+    if (intervalIDRef.current !== null) return;
+
+    intervalIDRef.current = setInterval(() => {
+      getRefresh(false)
+        .then((data: any) => {
+          setPublicKeyFromCookies(data.playerData.publicKey);
+          setAccessToken(data.accessToken);
+        })
+        .catch((err) => console.log(err));
+    }, REFRESH_INTERVAL);
+  }, []);
+
+  useEffect(() => {
+    if (intervalSettedRef.current) return;
     getRefresh(true)
       .then((data: any) => {
-        setPublicKeyFromCookies(data?.playerData?.publicKey);
-        setAccessToken(data?.accessToken);
-        SAG.setAccessToken(data?.accessToken);
-
+        setPublicKeyFromCookies(data.playerData.publicKey);
         setInitialStates(data);
       })
-      .catch(console.error);
+      .catch((err) => console.log(err))
+      .finally(() => {
+        SAG.setIsAuthLoading(false);
+      });
+    if (isConnected) setupRefreshInterval();
+    intervalSettedRef.current = true;
+    SAG.setIsAuthLoading(true);
 
-    if (isConnected) {
-      intervalId = setInterval(() => {
-        getRefresh(false)
-          .then((data: any) => {
-            setPublicKeyFromCookies(data?.playerData?.publicKey);
-            setAccessToken(data?.accessToken);
-            SAG.setAccessToken(data?.accessToken);
-          })
-          .catch(console.error);
-      }, REFRESH_INTERVAL);
-    }
-    return () => clearInterval(intervalId);
-  }, [isConnected]);
+    return () => {
+      if (intervalIDRef.current !== null) {
+        clearInterval(intervalIDRef.current);
+        intervalIDRef.current = null;
+        SAG.setIsAuthLoading(false);
+      }
+    };
+  }, [setupRefreshInterval, intervalSettedRef]);
 
   const handleLogout = useCallback(async () => {
     try {
@@ -74,8 +86,7 @@ export function LoginButton() {
         const authData = await authFunction();
         setInitialStates(authData);
       } catch (error) {
-        console.error("Login failed:", error);
-        toast.error("Login failed");
+        handleAuthenticationError(error);
       } finally {
         handleClose();
         SAG.setIsAuthLoading(false);
@@ -136,14 +147,13 @@ export function LoginButton() {
 function setInitialStates(authData: any) {
   SAG.setIsConnected(true);
   const pb = authData.playerData.publicKey;
+  setAccessToken(authData.accessToken);
 
   if (pb) {
     SAG.setIsConnected(true);
     SAG.setGoogleId(pb.startsWith("google") ? pb : "");
     SAG.setWalletAddress(pb.startsWith("google") ? "" : pb);
     SAG.setAddress(pb);
-    setAccessToken(authData.accessToken);
-    SAG.setAccessToken(authData?.accessToken);
 
     SAG.setUsername(authData.playerData.username);
     SAG.setIsStarknetID(authData.playerData.username?.includes(".stark"));
@@ -219,4 +229,20 @@ function LoadingSpinner() {
       />
     </svg>
   );
+}
+
+function handleAuthenticationError(err: any) {
+  if (err.response?.status === 403) {
+    toast.error("You are banned");
+    window.document.exitPointerLock();
+  } else if (err.response?.status === 404) {
+    toast.error("Please deploy your walllet first");
+  } else if (err.response?.status === 401) {
+    toast.error(
+      "Issue verifying signature, if yous jsut deployed your wallet, please wait a few minutes, and try again"
+    );
+  } else {
+    toast.error("Unexpected error occurred");
+    console.log("Unexpected error:", err);
+  }
 }

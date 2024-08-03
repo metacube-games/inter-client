@@ -23,7 +23,6 @@ const COLUMNS = [
   { key: "cubes", title: "Cubes", width: "w-24" },
   { key: "totalCoins", title: "Coins", width: "w-24" },
   { key: "deaths", title: "Deaths", width: "w-24" },
-  { key: "nfts", title: "NFTs", width: "w-24" },
 ];
 
 export function StatsPanel() {
