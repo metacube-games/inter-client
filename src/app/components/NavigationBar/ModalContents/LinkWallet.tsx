@@ -30,18 +30,12 @@ export function LinkWallet() {
   };
 
   const confirmLinking = async () => {
-    if (walletAddress && googleID?.length > 5) {
-      try {
-        setRewardAddressBAPI(walletAddress);
-        alert("Failed to link wallet. Please try in some hours...");
-      } catch (error) {
-        console.error("Error linking wallet:", error);
-        alert("Failed to link wallet. Please try again.");
-      }
-    } else {
-      alert(
-        "Please make sure you're logged in with Google and your wallet is connected."
-      );
+    try {
+      setRewardAddressBAPI(walletAddress as string);
+      alert("Failed to link wallet. Please try in some hours...");
+    } catch (error) {
+      console.error("Error linking wallet:", error);
+      alert("Failed to link wallet. Please try again.");
     }
   };
 
@@ -118,11 +112,11 @@ export function LinkWallet() {
         <button
           onClick={confirmLinking}
           className={
-            walletAddress && googleID?.length > 5
-              ? buttonStyle
-              : disabledButtonStyle
+            !walletAddress || !(googleID?.length > 5)
+              ? disabledButtonStyle
+              : buttonStyle
           }
-          disabled={!walletAddress || googleID?.length < 5}
+          disabled={!walletAddress || !(googleID?.length > 5)}
         >
           Confirm
         </button>
