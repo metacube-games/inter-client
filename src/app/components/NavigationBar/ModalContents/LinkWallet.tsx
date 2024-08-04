@@ -54,7 +54,6 @@ export function LinkWallet() {
   useEffect(() => {
     getRewardAddress()
       .then((rewardAddress: any) => {
-        console.log(rewardAddress);
         const fRewardAddress = `0x${rewardAddress?.address}`;
         setRewardAddress(fRewardAddress);
       })

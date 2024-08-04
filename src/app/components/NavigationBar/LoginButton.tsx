@@ -40,7 +40,6 @@ export function LoginButton({
       getRefresh(false)
         .then((data: any) => {
           setPublicKeyFromCookies(data?.playerData?.publicKey);
-          console.log(data, "  refreshfalse");
           if (data?.accessToken) setAccessToken(data?.accessToken);
         })
         .catch((err) => console.log(err));
@@ -52,7 +51,6 @@ export function LoginButton({
     getRefresh(true)
       .then((data: any) => {
         setPublicKeyFromCookies(data?.playerData?.publicKey);
-        console.log(data);
         setInitialStates(data);
       })
       .catch((err) => console.log(err))
@@ -97,31 +95,25 @@ export function LoginButton({
     [handleClose]
   );
 
-  const handleWalletConnect = useCallback(
-    () =>
-      connectToStarknet()
-        .then((data: any) => {
-          SAG.setIsAuthLoading(true);
-          if (data) setInitialStates(data);
-        })
-        .catch((err) => console.log(err))
-        .finally(() => {
-          SAG.setIsAuthLoading(false);
-          handleClose();
-        }),
-    [handleAuth]
-  );
+  const handleWalletConnect = useCallback(() => {
+    SAG.setIsAuthLoading(true);
+
+    return connectToStarknet()
+      .then((data: any) => {
+        if (data) setInitialStates(data);
+      })
+      .catch((err) => console.log(err))
+      .finally(() => {
+        SAG.setIsAuthLoading(false);
+        handleClose();
+      });
+  }, [handleAuth]);
 
   const handleGoogleLogin = useCallback(
     (credentialResponse: { credential: string }) => {
       SAG.setIsAuthLoading(true);
-      postConnectGoogle(credentialResponse?.credential)
+      return postConnectGoogle(credentialResponse?.credential)
         .then((data: any) => {
-          console.log("wertwert", data);
-          if (data) setInitialStates(data);
-        })
-        .then((data: any) => {
-          console.log("waééetutils", data);
           if (data) setInitialStates(data);
         })
         .catch((err) => console.log(err))
@@ -183,7 +175,6 @@ export function LoginButton({
 
 function setInitialStates(authData: any) {
   SAG.setIsConnected(true);
-  console.log("initial states", authData);
   const pb = authData?.playerData?.publicKey;
   setAccessToken(authData?.accessToken);
 
