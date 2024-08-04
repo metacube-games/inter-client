@@ -143,7 +143,7 @@ export function LoginButton({
               onSuccess={(response) => {
                 if (setIsGoogleLoggedIn) setIsGoogleLoggedIn(true) as any;
                 if (response?.credential) {
-                  handleGoogleLogin(response);
+                  handleGoogleLogin(response as any);
                 }
               }}
               onError={() => toast.error("Google login failed")}
