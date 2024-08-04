@@ -137,7 +137,7 @@ export function LoginButton({
     <>
       <Toaster position="top-right" toastOptions={{ duration: 3000 }} />
       {onlyGoogleLogin ? (
-        <div className="bg-black border-2 border-green-400 p-1  rounded-md shadow-xl">
+        <div className="bg-black  p-1  rounded-md shadow-xl">
           <div className="space-y-4">
             <GoogleLogin
               onSuccess={(response) => {
