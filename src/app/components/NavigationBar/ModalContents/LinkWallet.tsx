@@ -133,7 +133,7 @@ export function LinkWallet() {
             className="flex  text-center justify-center   flex-col"
           >
             <Image
-              src="/ArgentX.webp"
+              src="/argentX.webp"
               alt="Argent X"
               width={60}
               height={50}
