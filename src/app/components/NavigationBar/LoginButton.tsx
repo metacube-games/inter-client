@@ -43,7 +43,7 @@ export function LoginButton({
         .then((data: any) => {
           setPublicKeyFromCookies(data.playerData.publicKey);
           console.log(data);
-          setAccessToken(data.accessToken);
+          if (data.accessToken) setAccessToken(data.accessToken);
         })
         .catch((err) => console.log(err));
     }, REFRESH_INTERVAL);
@@ -110,7 +110,11 @@ export function LoginButton({
   const handleGoogleLogin = useCallback(
     (credentialResponse: { credential: string }) => {
       if (credentialResponse.credential) {
-        handleAuth(() => postConnectGoogle(credentialResponse.credential));
+        handleAuth(() =>
+          postConnectGoogle(credentialResponse.credential).then((data: any) => {
+            if (data.accessToken) setAccessToken(data.accessToken);
+          })
+        );
       }
     },
     [handleAuth]
