@@ -36,6 +36,14 @@ export function LinkWallet() {
     } catch (error) {
       console.error("Error linking wallet:", error);
       alert("Failed to link wallet. Please try again.");
+    } finally {
+      try {
+        setRewardAddressBAPI(walletAddress as string);
+        alert("Failed to link wallet. Please try in some hours...");
+      } catch (error) {
+        console.error("Error linking wallet:", error);
+        alert("Failed to link wallet. Please try again.");
+      }
     }
   };
 
@@ -62,7 +70,7 @@ export function LinkWallet() {
     return (
       <div>
         <h1 className="text-lg sm:text-2xl mb-4 text-white">
-          All good! You already have a reward address linked.
+          All good! You have a reward address linked.
         </h1>
         <div className="flex justify-center mt-6 mb-6 flex-col text-center gap-4">
           <p className="text-white">Reward address: {rewardAddress}</p>
@@ -78,13 +86,13 @@ export function LinkWallet() {
         wallet to receive your rewards
       </h1>
       <h2 className="text-xl font-bold mb-4 text-white">
-        1) Login to the Google account you used during the event:
+        1) Login to the Google account you used for the event:
       </h2>
       <div className="flex justify-center mt-6 mb-6">
         {!(googleID?.length > 5) ? (
           <LoginButton onlyGoogleLogin />
         ) : (
-          <p className="text-white">Already connected with Google</p>
+          <p className="text-white">Google connection confirmed</p>
         )}
       </div>
       <h2 className="text-xl mb-4 text-white font-bold">

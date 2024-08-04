@@ -75,6 +75,7 @@ export function LoginButton({
         await disconnectWallet();
       }
       SAG.reset();
+      setAccessToken("");
     } catch (error) {
       console.error("Logout failed:", error);
       toast.error("Logout failed");
