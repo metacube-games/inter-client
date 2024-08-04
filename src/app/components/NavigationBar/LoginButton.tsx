@@ -174,7 +174,8 @@ export function LoginButton({
 
 function setInitialStates(authData: any) {
   SAG.setIsConnected(true);
-  const pb = authData.playerData.publicKey;
+  console.log(authData);
+  const pb = authData?.playerData?.publicKey;
   setAccessToken(authData.accessToken);
 
   if (pb) {
