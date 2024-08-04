@@ -31,7 +31,7 @@ export function LinkWallet() {
   };
 
   const confirmLinking = async () => {
-    if (walletAddress && isGoogleLoggedIn) {
+    if (walletAddress && (isGoogleLoggedIn || googleID?.length > 5)) {
       try {
         setRewardAddressBAPI(walletAddress);
         alert("Failed to link wallet. Please try in some hours...");
@@ -63,7 +63,7 @@ export function LinkWallet() {
       }
     };
     getRaddress();
-  }, [isGoogleLoggedIn, isLogin]);
+  }, [isGoogleLoggedIn, googleID, isLogin]);
 
   if (rewardAddress?.length > 5) {
     return (
@@ -118,11 +118,13 @@ export function LinkWallet() {
         <button
           onClick={confirmLinking}
           className={
-            walletAddress && isGoogleLoggedIn
+            walletAddress && (isGoogleLoggedIn || googleID?.length > 5)
               ? buttonStyle
               : disabledButtonStyle
           }
-          disabled={!walletAddress || !isGoogleLoggedIn}
+          disabled={
+            !walletAddress || !(isGoogleLoggedIn || googleID?.length > 5)
+          }
         >
           Confirm
         </button>
