@@ -56,7 +56,7 @@ export function LoginButton({
         setPublicKeyFromCookies(data?.playerData?.publicKey);
         console.log(data);
         setAccessToken(data?.accessToken);
-        setInitialStates(data);
+        // setInitialStates(data);
       })
       .catch((err) => console.log(err))
       .finally(() => {
@@ -113,7 +113,8 @@ export function LoginButton({
         handleAuth(() =>
           postConnectGoogle(credentialResponse.credential).then((data: any) => {
             console.log("waééetutils", data);
-            if (data?.accessToken) setAccessToken(data.accessToken);
+            setInitialStates(data);
+            // if (data?.accessToken) setAccessToken(data.accessToken);
           })
         );
       }
