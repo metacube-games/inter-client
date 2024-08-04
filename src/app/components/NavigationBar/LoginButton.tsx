@@ -113,7 +113,7 @@ export function LoginButton({
       if (credentialResponse.credential) {
         handleAuth(() =>
           postConnectGoogle(credentialResponse.credential).then((data: any) => {
-            console.log("waééetutils", data);
+            console.log("wertwert", data);
             if (data) setAccessToken(data.accessToken);
           })
         ).then((data: any) => {
