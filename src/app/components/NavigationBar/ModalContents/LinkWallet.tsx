@@ -5,7 +5,7 @@ import { LoginButton } from "../LoginButton";
 import { connect } from "get-starknet";
 import {
   getRewardAddress,
-  setRewardAddress,
+  setRewardAddressBAPI,
 } from "@/app/backendAPI/backendAPI";
 import Image from "next/image";
 import { useAuthStore } from "@/app/store/authStore";
@@ -31,7 +31,7 @@ export function LinkWallet() {
   const confirmLinking = async () => {
     if (walletAddress && isGoogleLoggedIn) {
       try {
-        await setRewardAddress(walletAddress);
+        setRewardAddressBAPI(walletAddress);
         alert("Wallet linked successfully!");
       } catch (error) {
         console.error("Error linking wallet:", error);
@@ -54,7 +54,6 @@ export function LinkWallet() {
       try {
         const rewardAddress = (await getRewardAddress()) as any;
         const fRewardAddress = `0x${rewardAddress?.address}`;
-        // "0x029aaeff147fcdd9fedecb94a6cf20c55022d7f8df66df4e9a8da4f0c7483261"; //
         setRewardAddress(fRewardAddress);
       } catch (err) {
         console.error(err);
@@ -132,7 +131,13 @@ export function LinkWallet() {
             // margin space left and right
             className="flex  text-center justify-center   flex-col"
           >
-            <Image src="/ArgentX.webp" alt="Argent X" width={60} height={50} />
+            <Image
+              src="/ArgentX.webp"
+              alt="Argent X"
+              width={60}
+              height={50}
+              style={{ height: "auto", width: "auto" }}
+            />
             <p className="text-white text-center -ml-1">Argent X</p>
           </a>
           <a
@@ -141,7 +146,13 @@ export function LinkWallet() {
             rel="noopener noreferrer"
             // margin space left and right
           >
-            <Image src="/Braavos.webp" alt="Braavos" width={60} height={50} />
+            <Image
+              src="/Braavos.webp"
+              alt="Braavos"
+              width={60}
+              height={50}
+              style={{ height: "auto", width: "auto" }}
+            />
             <p className="text-white text-center">Braavos</p>
           </a>
         </div>

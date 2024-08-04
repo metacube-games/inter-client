@@ -43,10 +43,14 @@ export async function getRewardAddress() {
     .json();
 }
 
-export async function setRewardAddress(address: string) {
+export async function setRewardAddressBAPI(address: string) {
   return api
     .post("profile/address", {
       json: { address },
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      credentials: "include",
     })
     .json();
 }

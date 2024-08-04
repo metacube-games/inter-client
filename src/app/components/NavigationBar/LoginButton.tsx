@@ -77,6 +77,8 @@ export function LoginButton({
       await disconnect();
       if (walletAddress) {
         await disconnectWallet();
+      } else {
+        if (setIsGoogleLoggedIn) setIsGoogleLoggedIn(false);
       }
       SAG.reset();
     } catch (error) {
