@@ -112,11 +112,15 @@ export function LinkWallet() {
         <button
           onClick={confirmLinking}
           className={
-            !walletAddress || !(googleID?.length > 5)
+            !(walletAddress && walletAddress.length > 5) ||
+            !(googleID?.length > 5)
               ? disabledButtonStyle
               : buttonStyle
           }
-          disabled={!walletAddress || !(googleID?.length > 5)}
+          disabled={
+            !(walletAddress && walletAddress.length > 5) ||
+            !(googleID?.length > 5)
+          }
         >
           Confirm
         </button>
