@@ -41,9 +41,9 @@ export function LoginButton({
     intervalIDRef.current = setInterval(() => {
       getRefresh(false)
         .then((data: any) => {
-          setPublicKeyFromCookies(data.playerData.publicKey);
+          setPublicKeyFromCookies(data?.playerData?.publicKey);
           console.log(data, "  refreshfalse");
-          if (data?.accessToken) setAccessToken(data.accessToken);
+          if (data?.accessToken) setAccessToken(data?.accessToken);
         })
         .catch((err) => console.log(err));
     }, REFRESH_INTERVAL);
@@ -53,9 +53,9 @@ export function LoginButton({
     if (intervalSettedRef.current) return;
     getRefresh(true)
       .then((data: any) => {
-        setPublicKeyFromCookies(data.playerData.publicKey);
+        setPublicKeyFromCookies(data?.playerData?.publicKey);
         console.log(data);
-        setAccessToken(data.accessToken);
+        setAccessToken(data?.accessToken);
         setInitialStates(data);
       })
       .catch((err) => console.log(err))
