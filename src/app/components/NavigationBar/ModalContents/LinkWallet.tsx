@@ -76,7 +76,7 @@ export function LinkWallet() {
               setIsGoogleLoggedIn={setIsGoogleLoggedIn}
             />
           ) : (
-            <p className="text-white">Connected with Google.</p>
+            <p className="text-white">Connected with Google</p>
           )}
           <p className="text-white">Reward address: {rewardAddress}</p>
         </div>
@@ -84,83 +84,82 @@ export function LinkWallet() {
     );
   }
 
-  if (wa)
-    return (
-      <div>
-        <h1 className="text-md mb-4 text-white">
-          If you won assets playing with a Google account, you have to link a
-          wallet to receive your rewards
-        </h1>
-        <h2 className="text-xl font-bold mb-4 text-white">
-          1) Login to the Google account you used during the event:
-        </h2>
-        <div className="flex justify-center mt-6 mb-6">
-          <LoginButton
-            onlyGoogleLogin
-            setIsGoogleLoggedIn={setIsGoogleLoggedIn}
-          />
-        </div>
-        <h2 className="text-xl mb-4 text-white font-bold">
-          2) Link your wallet:
-        </h2>
-        <div className="flex flex-col items-center gap-4 mb-6">
-          <button onClick={connectWallet} className={buttonStyle}>
-            Connect Wallet
-          </button>
-          {walletAddress && (
-            <p className="text-white">Wallet connected: {walletAddress}</p>
-          )}
-        </div>
+  return (
+    <div>
+      <h1 className="text-md mb-4 text-white">
+        If you won assets playing with a Google account, you have to link a
+        wallet to receive your rewards
+      </h1>
+      <h2 className="text-xl font-bold mb-4 text-white">
+        1) Login to the Google account you used during the event:
+      </h2>
+      <div className="flex justify-center mt-6 mb-6">
+        <LoginButton
+          onlyGoogleLogin
+          setIsGoogleLoggedIn={setIsGoogleLoggedIn}
+        />
+      </div>
+      <h2 className="text-xl mb-4 text-white font-bold">
+        2) Link your wallet:
+      </h2>
+      <div className="flex flex-col items-center gap-4 mb-6">
+        <button onClick={connectWallet} className={buttonStyle}>
+          Connect Wallet
+        </button>
+        {walletAddress && (
+          <p className="text-white">Wallet connected: {walletAddress}</p>
+        )}
+      </div>
 
-        <h2 className="text-xl mb-4 text-white font-bold">3) Confirm:</h2>
-        <div className="flex flex-col items-center gap-4 mb-6">
-          <button
-            onClick={confirmLinking}
-            className={
-              walletAddress && isGoogleLoggedIn
-                ? buttonStyle
-                : disabledButtonStyle
-            }
-            disabled={!walletAddress || !isGoogleLoggedIn}
+      <h2 className="text-xl mb-4 text-white font-bold">3) Confirm:</h2>
+      <div className="flex flex-col items-center gap-4 mb-6">
+        <button
+          onClick={confirmLinking}
+          className={
+            walletAddress && isGoogleLoggedIn
+              ? buttonStyle
+              : disabledButtonStyle
+          }
+          disabled={!walletAddress || !isGoogleLoggedIn}
+        >
+          Confirm
+        </button>
+      </div>
+
+      <div className="mt-8 text-white">
+        <p>You can get a wallet for free here:</p>
+        <div className="flex justify-center space-x-16 mt-4">
+          <a
+            href="https://www.argent.xyz/argent-x/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex text-center justify-center flex-col"
           >
-            Confirm
-          </button>
-        </div>
-
-        <div className="mt-8 text-white">
-          <p>You can get a wallet for free here:</p>
-          <div className="flex justify-center space-x-16 mt-4">
-            <a
-              href="https://www.argent.xyz/argent-x/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex text-center justify-center flex-col"
-            >
-              <Image
-                src="/argentX.webp"
-                alt="Argent X"
-                width={60}
-                height={50}
-                style={{ height: "auto", width: "auto" }}
-              />
-              <p className="text-white text-center -ml-1">Argent X</p>
-            </a>
-            <a
-              href="https://braavos.app/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Image
-                src="/Braavos.webp"
-                alt="Braavos"
-                width={60}
-                height={50}
-                style={{ height: "auto", width: "auto" }}
-              />
-              <p className="text-white text-center">Braavos</p>
-            </a>
-          </div>
+            <Image
+              src="/argentX.webp"
+              alt="Argent X"
+              width={60}
+              height={50}
+              style={{ height: "auto", width: "auto" }}
+            />
+            <p className="text-white text-center -ml-1">Argent X</p>
+          </a>
+          <a
+            href="https://braavos.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Image
+              src="/Braavos.webp"
+              alt="Braavos"
+              width={60}
+              height={50}
+              style={{ height: "auto", width: "auto" }}
+            />
+            <p className="text-white text-center">Braavos</p>
+          </a>
         </div>
       </div>
-    );
+    </div>
+  );
 }
