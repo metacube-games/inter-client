@@ -96,10 +96,14 @@ export function LinkWallet() {
         1) Login to the Google account you used during the event:
       </h2>
       <div className="flex justify-center mt-6 mb-6">
-        <LoginButton
-          onlyGoogleLogin
-          setIsGoogleLoggedIn={setIsGoogleLoggedIn}
-        />
+        {googleID?.length > 5 ? (
+          <LoginButton
+            onlyGoogleLogin
+            setIsGoogleLoggedIn={setIsGoogleLoggedIn}
+          />
+        ) : (
+          <p className="text-white">Already connected with Google</p>
+        )}
       </div>
       <h2 className="text-xl mb-4 text-white font-bold">
         2) Link your wallet:
