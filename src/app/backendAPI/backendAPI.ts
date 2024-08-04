@@ -33,6 +33,8 @@ export const postConnectGoogle = (credential: string) =>
     .json();
 
 export async function getRewardAddress() {
+  console.log(accessToken);
+
   return api
     .get("profile/address", {
       headers: {
@@ -44,7 +46,7 @@ export async function getRewardAddress() {
 }
 
 export async function setRewardAddressBAPI(address: string) {
-  console.log(address);
+  console.log(accessToken);
   return api
     .post("profile/address", {
       json: { address },

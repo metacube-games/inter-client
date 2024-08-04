@@ -129,8 +129,7 @@ export function LinkWallet() {
             href="https://www.argent.xyz/argent-x/"
             target="_blank"
             rel="noopener noreferrer"
-            // margin space left and right
-            className="flex  text-center justify-center   flex-col"
+            className="flex text-center justify-center flex-col"
           >
             <Image
               src="/argentX.webp"
@@ -145,7 +144,6 @@ export function LinkWallet() {
             href="https://braavos.app/"
             target="_blank"
             rel="noopener noreferrer"
-            // margin space left and right
           >
             <Image
               src="/Braavos.webp"

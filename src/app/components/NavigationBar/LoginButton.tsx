@@ -59,16 +59,12 @@ export function LoginButton({
       .finally(() => {
         SAG.setIsAuthLoading(false);
       });
-    if (isConnected) setupRefreshInterval();
+    setupRefreshInterval();
     intervalSettedRef.current = true;
     SAG.setIsAuthLoading(true);
 
     return () => {
-      if (intervalIDRef.current !== null) {
-        clearInterval(intervalIDRef.current);
-        intervalIDRef.current = null;
-        SAG.setIsAuthLoading(false);
-      }
+      SAG.setIsAuthLoading(false);
     };
   }, [setupRefreshInterval, intervalSettedRef]);
 
