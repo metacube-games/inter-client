@@ -7,6 +7,7 @@ import {
 } from "@/app/backendAPI/backendAPI";
 import Image from "next/image";
 import { useAuthStore } from "@/app/store/authStore";
+import toast from "react-hot-toast";
 
 export function LinkWallet() {
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
@@ -35,11 +36,11 @@ export function LinkWallet() {
   const confirmLinking = () => {
     setRewardAddressBAPI(walletAddress as string)
       .then(() => {
-        alert("Failed to link wallet. Please try in some hours...");
+        toast.success("Successfully linked wallet");
       })
       .catch((error) => {
         console.error("Error linking wallet:", error);
-        alert("Failed to link wallet. Please try again.");
+        toast.error("Failed to link wallet. Please try again.");
       })
       .finally(() => {
         rewardAync();
