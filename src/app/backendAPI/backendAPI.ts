@@ -15,6 +15,10 @@ export function setAccessToken(token: string) {
   accessToken = token;
 }
 
+export function getAccessToken() {
+  return accessToken;
+}
+
 export const getAllStatistics = () => api.get("info/stats").json();
 
 export const postConnect = (publicKey: string, r: string, s: string) =>

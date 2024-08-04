@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { LoginButton } from "../LoginButton";
 import { connect } from "get-starknet";
 import {
+  getAccessToken,
   getRewardAddress,
   setRewardAddressBAPI,
 } from "@/app/backendAPI/backendAPI";
@@ -16,7 +17,7 @@ export function LinkWallet() {
   const isLogin = useAuthStore((state) => state.isConnected);
   const googleID = useAuthStore((state) => state.googleId);
   const [rewardAddress, setRewardAddress] = useState("");
-
+  console.log("accesT", getAccessToken());
   const connectWallet = async () => {
     try {
       const starknet = await connect();
