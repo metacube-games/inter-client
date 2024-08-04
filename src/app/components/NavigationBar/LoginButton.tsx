@@ -14,8 +14,14 @@ import { setPublicKeyFromCookies } from "@/app/utils/starknet";
 import ReactDOM from "react-dom";
 
 const REFRESH_INTERVAL = 270000;
-
-export function LoginButton() {
+// add argument for only google login
+export function LoginButton({
+  onlyGoogleLogin = false,
+  setIsGoogleLoggedIn,
+}: {
+  onlyGoogleLogin?: boolean;
+  setIsGoogleLoggedIn?: (arg0: boolean) => void;
+}) {
   const { open, handleOpen, handleClose } = useOpenConnexionModal();
   const { isConnected, isAuthLoading, address, walletAddress } = useAuthStore(
     (state) => ({
@@ -124,22 +130,38 @@ export function LoginButton() {
   return (
     <>
       <Toaster position="top-right" toastOptions={{ duration: 3000 }} />
-      <button
-        onClick={isConnected ? handleLogout : handleOpen}
-        disabled={isAuthLoading}
-        className="px-4 py-2 rounded transition duration-150 ease-in-out bg-black bg-opacity-50 hover:bg-opacity-70 text-green-400"
-      >
-        {displayContent()}
-      </button>
-      {open &&
-        ReactDOM.createPortal(
-          <LoginModal
-            onClose={handleClose}
-            onGoogleLogin={handleGoogleLogin}
-            onWalletConnect={handleWalletConnect}
-          />,
-          document.body
-        )}
+      {onlyGoogleLogin ? (
+        <div className="bg-black border-2 border-green-400 p-1  rounded-md shadow-xl">
+          <div className="space-y-4">
+            <GoogleLogin
+              onSuccess={() => {
+                if (setIsGoogleLoggedIn) setIsGoogleLoggedIn(true) as any;
+                handleGoogleLogin as any;
+              }}
+              onError={() => toast.error("Google login failed")}
+            />
+          </div>
+        </div>
+      ) : (
+        <>
+          <button
+            onClick={isConnected ? handleLogout : handleOpen}
+            disabled={isAuthLoading}
+            className="px-4 py-2 rounded transition duration-150 ease-in-out bg-black bg-opacity-50 hover:bg-opacity-70 text-green-400"
+          >
+            {displayContent()}
+          </button>
+          {open &&
+            ReactDOM.createPortal(
+              <LoginModal
+                onClose={handleClose}
+                onGoogleLogin={handleGoogleLogin}
+                onWalletConnect={handleWalletConnect}
+              />,
+              document.body
+            )}
+        </>
+      )}
     </>
   );
 }

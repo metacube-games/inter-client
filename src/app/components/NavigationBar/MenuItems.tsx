@@ -2,18 +2,19 @@ import React from "react";
 import {
   ChartBarIcon,
   BuildingStorefrontIcon,
+  LinkIcon,
 } from "@heroicons/react/24/outline";
+import { useModalStore } from "@/app/store/connexionModalStore";
 
 const menuItems = [
   { name: "Assets", icon: BuildingStorefrontIcon },
   { name: "Stats", icon: ChartBarIcon },
+  { name: "Link Wallet", icon: LinkIcon },
 ];
 
-export function MenuItems({
-  setActiveModal,
-}: {
-  setActiveModal: (name: string) => void;
-}) {
+export function MenuItems() {
+  const setActiveModal = useModalStore((state) => state.setActiveModal);
+
   return (
     <div className="flex space-x-4">
       {menuItems.map(({ name, icon: Icon }) => (

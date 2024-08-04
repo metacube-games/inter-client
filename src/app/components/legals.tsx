@@ -1,4 +1,3 @@
-// components/LegalLinks.tsx
 import Link from "next/link";
 
 export function LegalLinks() {

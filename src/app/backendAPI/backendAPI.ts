@@ -42,6 +42,15 @@ export async function getRewardAddress() {
     })
     .json();
 }
+
+export async function setRewardAddress(address: string) {
+  return api
+    .post("profile/address", {
+      json: { address },
+    })
+    .json();
+}
+
 export const disconnect = () => api.get("auth/disconnect").json();
 
 export const getNonce = (publicKey: string) => {

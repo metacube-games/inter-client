@@ -1,15 +1,10 @@
-"use client";
-
 import React, { useState } from "react";
 import Link from "next/link";
 import { MenuItems } from "./MenuItems";
 import { LoginButton } from "./LoginButton";
 import { Modal } from "./Modal";
-import { useAuthStore } from "@/app/store/authStore";
 
 export function NavigationBar() {
-  const [activeModal, setActiveModal] = useState<string | null>(null);
-
   return (
     <nav className="absolute top-0 left-0 right-0 flex justify-between items-center p-6 z-10">
       <Link href="https://metacube.games" passHref legacyBehavior>
@@ -18,10 +13,10 @@ export function NavigationBar() {
         </a>
       </Link>
       <div className="flex items-center space-x-4">
-        <MenuItems setActiveModal={setActiveModal} />
+        <MenuItems />
         <LoginButton />
       </div>
-      <Modal activeModal={activeModal} onClose={() => setActiveModal(null)} />
+      <Modal />
     </nav>
   );
 }

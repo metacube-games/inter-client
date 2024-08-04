@@ -26,18 +26,18 @@ const SocialLink = ({ url }: { url: string }) => (
 );
 
 export default function Home() {
-  const [ended, setEnded] = useState(false);
+  const [ended, setEnded] = useState(true);
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-20 relative">
       <NavigationBar />
       <LegalLinks />
       {ended ? (
-        <div className="absolute inset-0 w-full h-full object-cover circular-landscape">
+        <div className="absolute inset-0 w-full h-full object-cover circular-landscape brightness-90 ">
           <Image
             src="/stoveArmy.jpg"
             fill
-            className="object-cover opacity-90 blur-sm brightness-50"
+            className="object-cover opacity-90 blur-sm brightness-50   "
             alt="Stove army spaceship"
           />
         </div>
