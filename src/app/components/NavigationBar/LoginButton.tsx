@@ -176,16 +176,16 @@ function setInitialStates(authData: any) {
   SAG.setIsConnected(true);
   console.log(authData);
   const pb = authData?.playerData?.publicKey;
-  setAccessToken(authData.accessToken);
+  setAccessToken(authData?.accessToken);
 
   if (pb) {
     SAG.setIsConnected(true);
-    SAG.setGoogleId(pb.startsWith("google") ? pb : "");
-    SAG.setWalletAddress(pb.startsWith("google") ? "" : pb);
+    SAG.setGoogleId(pb?.startsWith("google") ? pb : "");
+    SAG.setWalletAddress(pb?.startsWith("google") ? "" : pb);
     SAG.setAddress(pb);
 
-    SAG.setUsername(authData.playerData.username);
-    SAG.setIsStarknetID(authData.playerData.username?.includes(".stark"));
+    SAG.setUsername(authData?.playerData?.username);
+    SAG.setIsStarknetID(authData?.playerData?.username?.includes(".stark"));
   }
 }
 
