@@ -55,8 +55,8 @@ export function LoginButton({
       .then((data: any) => {
         setPublicKeyFromCookies(data?.playerData?.publicKey);
         console.log(data);
-        setAccessToken(data?.accessToken);
-        // setInitialStates(data);
+        // setAccessToken(data?.accessToken);
+        setInitialStates(data);
       })
       .catch((err) => console.log(err))
       .finally(() => {
@@ -175,7 +175,7 @@ export function LoginButton({
 
 function setInitialStates(authData: any) {
   SAG.setIsConnected(true);
-  console.log(authData);
+  console.log("initial states", authData);
   const pb = authData?.playerData?.publicKey;
   setAccessToken(authData?.accessToken);
 
