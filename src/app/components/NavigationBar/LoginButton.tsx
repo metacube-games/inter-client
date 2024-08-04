@@ -55,7 +55,6 @@ export function LoginButton({
       .then((data: any) => {
         setPublicKeyFromCookies(data?.playerData?.publicKey);
         console.log(data);
-        // setAccessToken(data?.accessToken);
         setInitialStates(data);
       })
       .catch((err) => console.log(err))
@@ -91,7 +90,6 @@ export function LoginButton({
       try {
         SAG.setIsAuthLoading(true);
         const authData = await authFunction();
-        setInitialStates(authData);
       } catch (error) {
         handleAuthenticationError(error);
       } finally {
@@ -103,24 +101,36 @@ export function LoginButton({
   );
 
   const handleWalletConnect = useCallback(
-    () => handleAuth(connectToStarknet),
+    () =>
+      connectToStarknet()
+        .then((data: any) => {
+          SAG.setIsAuthLoading(true);
+          if (data) setInitialStates(data);
+        })
+        .catch((err) => console.log(err))
+        .finally(() => {
+          SAG.setIsAuthLoading(false);
+        }),
     [handleAuth]
   );
 
   const handleGoogleLogin = useCallback(
     (credentialResponse: { credential: string }) => {
+      SAG.setIsAuthLoading(true);
       if (setIsGoogleLoggedIn) setIsGoogleLoggedIn(true) as any;
-      if (credentialResponse.credential) {
-        handleAuth(() =>
-          postConnectGoogle(credentialResponse.credential).then((data: any) => {
-            console.log("wertwert", data);
-            if (data) setAccessToken(data.accessToken);
-          })
-        ).then((data: any) => {
+      postConnectGoogle(credentialResponse?.credential)
+        .then((data: any) => {
+          console.log("wertwert", data);
+          if (data) setInitialStates(data);
+        })
+        .then((data: any) => {
           console.log("waééetutils", data);
-          if (data) setAccessToken(data.accessToken);
+          if (data) setInitialStates(data);
+        })
+        .catch((err) => console.log(err))
+        .finally(() => {
+          SAG.setIsAuthLoading(false);
         });
-      }
     },
     [handleAuth]
   );
