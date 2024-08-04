@@ -107,6 +107,7 @@ export function LoginButton({
         .catch((err) => console.log(err))
         .finally(() => {
           SAG.setIsAuthLoading(false);
+          handleClose();
         }),
     [handleAuth]
   );
@@ -126,6 +127,7 @@ export function LoginButton({
         .catch((err) => console.log(err))
         .finally(() => {
           SAG.setIsAuthLoading(false);
+          handleClose();
         });
     },
     [handleAuth]
