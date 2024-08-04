@@ -122,7 +122,7 @@ export function LinkWallet() {
               ? buttonStyle
               : disabledButtonStyle
           }
-          disabled={!walletAddress || !(googleID?.length > 5)}
+          disabled={!walletAddress || googleID?.length < 5}
         >
           Confirm
         </button>
