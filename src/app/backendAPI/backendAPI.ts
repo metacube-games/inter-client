@@ -46,7 +46,7 @@ export async function getRewardAddress() {
 }
 
 export async function setRewardAddressBAPI(address: string) {
-  console.log(accessToken);
+  console.log("setttersend", accessToken, address);
   return api
     .post("profile/address", {
       json: { address },

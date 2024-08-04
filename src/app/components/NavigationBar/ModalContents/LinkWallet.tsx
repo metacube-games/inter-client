@@ -32,7 +32,6 @@ export function LinkWallet() {
     if (walletAddress && isGoogleLoggedIn) {
       try {
         setRewardAddressBAPI(walletAddress);
-        // alert("Wallet linked successfully!");
         alert("Failed to link wallet. Please try in some hours...");
       } catch (error) {
         console.error("Error linking wallet:", error);
