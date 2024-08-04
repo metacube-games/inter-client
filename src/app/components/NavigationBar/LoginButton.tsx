@@ -42,8 +42,8 @@ export function LoginButton({
       getRefresh(false)
         .then((data: any) => {
           setPublicKeyFromCookies(data.playerData.publicKey);
-          console.log(data);
-          if (data.accessToken) setAccessToken(data.accessToken);
+          console.log(data, "  refreshfalse");
+          if (data?.accessToken) setAccessToken(data.accessToken);
         })
         .catch((err) => console.log(err));
     }, REFRESH_INTERVAL);
@@ -112,7 +112,8 @@ export function LoginButton({
       if (credentialResponse.credential) {
         handleAuth(() =>
           postConnectGoogle(credentialResponse.credential).then((data: any) => {
-            if (data.accessToken) setAccessToken(data.accessToken);
+            console.log("waééetutils", data);
+            if (data?.accessToken) setAccessToken(data.accessToken);
           })
         );
       }
