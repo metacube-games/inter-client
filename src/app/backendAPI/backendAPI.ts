@@ -33,7 +33,7 @@ export const postConnectGoogle = (credential: string) =>
     .json();
 
 export async function getRewardAddress() {
-  console.log(accessToken);
+  console.log("accestoken", accessToken);
 
   return api
     .get("profile/address", {

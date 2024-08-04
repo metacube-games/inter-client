@@ -109,14 +109,17 @@ export function LoginButton({
 
   const handleGoogleLogin = useCallback(
     (credentialResponse: { credential: string }) => {
+      if (setIsGoogleLoggedIn) setIsGoogleLoggedIn(true) as any;
       if (credentialResponse.credential) {
         handleAuth(() =>
           postConnectGoogle(credentialResponse.credential).then((data: any) => {
             console.log("waééetutils", data);
-            setInitialStates(data);
-            // if (data?.accessToken) setAccessToken(data.accessToken);
+            if (data) setAccessToken(data.accessToken);
           })
-        );
+        ).then((data: any) => {
+          console.log("waééetutils", data);
+          if (data) setAccessToken(data.accessToken);
+        });
       }
     },
     [handleAuth]
@@ -141,12 +144,7 @@ export function LoginButton({
         <div className="bg-black  p-1  rounded-md shadow-xl">
           <div className="space-y-4">
             <GoogleLogin
-              onSuccess={(response) => {
-                if (setIsGoogleLoggedIn) setIsGoogleLoggedIn(true) as any;
-                if (response?.credential) {
-                  handleGoogleLogin(response as any);
-                }
-              }}
+              onSuccess={handleGoogleLogin as any}
               onError={() => toast.error("Google login failed")}
             />
           </div>
@@ -164,7 +162,7 @@ export function LoginButton({
             ReactDOM.createPortal(
               <LoginModal
                 onClose={handleClose}
-                onGoogleLogin={handleGoogleLogin}
+                handleGoogleLogin={handleGoogleLogin}
                 onWalletConnect={handleWalletConnect}
               />,
               document.body
@@ -194,11 +192,11 @@ function setInitialStates(authData: any) {
 
 function LoginModal({
   onClose,
-  onGoogleLogin,
+  handleGoogleLogin,
   onWalletConnect,
 }: {
   onClose: () => void;
-  onGoogleLogin: (credentialResponse: { credential: string }) => void;
+  handleGoogleLogin: (credentialResponse: { credential: string }) => void;
   onWalletConnect: () => void;
 }) {
   useEffect(() => {
@@ -223,7 +221,7 @@ function LoginModal({
         <h2 className="text-2xl font-bold mb-4 text-green-400">Login</h2>
         <div className="space-y-4">
           <GoogleLogin
-            onSuccess={onGoogleLogin as any}
+            onSuccess={handleGoogleLogin as any}
             onError={() => toast.error("Google login failed")}
           />
           <button

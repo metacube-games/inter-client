@@ -54,6 +54,7 @@ export function LinkWallet() {
     const getRaddress = async () => {
       try {
         const rewardAddress = (await getRewardAddress()) as any;
+        console.log(rewardAddress);
         const fRewardAddress = `0x${rewardAddress?.address}`;
         setRewardAddress(fRewardAddress);
       } catch (err) {
@@ -70,14 +71,14 @@ export function LinkWallet() {
           All good! You already have a reward address linked.
         </h1>
         <div className="flex justify-center mt-6 mb-6 flex-col text-center gap-4">
-          {googleID?.length < 5 ? (
+          {/* {googleID?.length < 5 ? (
             <LoginButton
               onlyGoogleLogin
               setIsGoogleLoggedIn={setIsGoogleLoggedIn}
             />
           ) : (
             <p className="text-white">Connected with Google</p>
-          )}
+          )} */}
           <p className="text-white">Reward address: {rewardAddress}</p>
         </div>
       </div>
