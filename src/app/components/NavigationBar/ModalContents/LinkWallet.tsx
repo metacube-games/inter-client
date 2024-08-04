@@ -1,10 +1,7 @@
-// ModalContents/LinkWallet.tsx
-
 import React, { useEffect, useState } from "react";
 import { LoginButton } from "../LoginButton";
 import { connect } from "get-starknet";
 import {
-  getAccessToken,
   getRewardAddress,
   setRewardAddressBAPI,
 } from "@/app/backendAPI/backendAPI";
@@ -13,38 +10,40 @@ import { useAuthStore } from "@/app/store/authStore";
 
 export function LinkWallet() {
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
+  const [rewardAddress, setRewardAddress] = useState("");
   const isLogin = useAuthStore((state) => state.isConnected);
   const googleID = useAuthStore((state) => state.googleId);
-  const [rewardAddress, setRewardAddress] = useState("");
-  console.log("accesT", getAccessToken());
-  const connectWallet = async () => {
-    try {
-      const starknet = await connect();
-      if (starknet) {
-        const [address] = await starknet.enable();
-        setWalletAddress(address);
-      }
-    } catch (error) {
-      console.error("Error connecting wallet:", error);
-    }
+
+  const connectWallet = () => {
+    connect()
+      .then((starknet) => {
+        if (starknet) {
+          return starknet.enable();
+        }
+        throw new Error("Starknet not available");
+      })
+      .then(([address]) => setWalletAddress(address))
+      .catch((error) => console.error("Error connecting wallet:", error));
   };
 
-  const confirmLinking = async () => {
-    try {
-      setRewardAddressBAPI(walletAddress as string);
-      alert("Failed to link wallet. Please try in some hours...");
-    } catch (error) {
-      console.error("Error linking wallet:", error);
-      alert("Failed to link wallet. Please try again.");
-    } finally {
-      try {
-        setRewardAddressBAPI(walletAddress as string);
+  const rewardAync = async () => {
+    const rewardAddress = (await getRewardAddress()) as any;
+    const fRewardAddress = `0x${rewardAddress?.address}`;
+    setRewardAddress(fRewardAddress);
+  };
+
+  const confirmLinking = () => {
+    setRewardAddressBAPI(walletAddress as string)
+      .then(() => {
         alert("Failed to link wallet. Please try in some hours...");
-      } catch (error) {
+      })
+      .catch((error) => {
         console.error("Error linking wallet:", error);
         alert("Failed to link wallet. Please try again.");
-      }
-    }
+      })
+      .finally(() => {
+        rewardAync();
+      });
   };
 
   const buttonStyle =
@@ -53,17 +52,13 @@ export function LinkWallet() {
     "bg-gray-400 text-white font-bold py-2 px-4 rounded cursor-not-allowed";
 
   useEffect(() => {
-    const getRaddress = async () => {
-      try {
-        const rewardAddress = (await getRewardAddress()) as any;
+    getRewardAddress()
+      .then((rewardAddress: any) => {
         console.log(rewardAddress);
         const fRewardAddress = `0x${rewardAddress?.address}`;
         setRewardAddress(fRewardAddress);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-    getRaddress();
+      })
+      .catch((err) => console.error(err));
   }, [googleID, isLogin]);
 
   if (rewardAddress?.length > 5) {
