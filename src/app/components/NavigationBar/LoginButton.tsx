@@ -140,9 +140,11 @@ export function LoginButton({
         <div className="bg-black border-2 border-green-400 p-1  rounded-md shadow-xl">
           <div className="space-y-4">
             <GoogleLogin
-              onSuccess={() => {
+              onSuccess={(response) => {
                 if (setIsGoogleLoggedIn) setIsGoogleLoggedIn(true) as any;
-                handleGoogleLogin as any;
+                if (response?.credential) {
+                  handleGoogleLogin(response);
+                }
               }}
               onError={() => toast.error("Google login failed")}
             />
