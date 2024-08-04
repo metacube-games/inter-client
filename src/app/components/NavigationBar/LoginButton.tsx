@@ -17,10 +17,8 @@ const REFRESH_INTERVAL = 270000;
 // add argument for only google login
 export function LoginButton({
   onlyGoogleLogin = false,
-  setIsGoogleLoggedIn,
 }: {
   onlyGoogleLogin?: boolean;
-  setIsGoogleLoggedIn?: (arg0: boolean) => void;
 }) {
   const { open, handleOpen, handleClose } = useOpenConnexionModal();
   const { isConnected, isAuthLoading, address, walletAddress } = useAuthStore(
@@ -75,8 +73,6 @@ export function LoginButton({
       await disconnect();
       if (walletAddress) {
         await disconnectWallet();
-      } else {
-        if (setIsGoogleLoggedIn) setIsGoogleLoggedIn(false);
       }
       SAG.reset();
     } catch (error) {
@@ -117,7 +113,6 @@ export function LoginButton({
   const handleGoogleLogin = useCallback(
     (credentialResponse: { credential: string }) => {
       SAG.setIsAuthLoading(true);
-      if (setIsGoogleLoggedIn) setIsGoogleLoggedIn(true) as any;
       postConnectGoogle(credentialResponse?.credential)
         .then((data: any) => {
           console.log("wertwert", data);

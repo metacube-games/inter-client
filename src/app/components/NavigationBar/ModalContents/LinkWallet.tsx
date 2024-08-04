@@ -13,7 +13,6 @@ import { useAuthStore } from "@/app/store/authStore";
 
 export function LinkWallet() {
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
-  const [isGoogleLoggedIn, setIsGoogleLoggedIn] = useState(false);
   const isLogin = useAuthStore((state) => state.isConnected);
   const googleID = useAuthStore((state) => state.googleId);
   const [rewardAddress, setRewardAddress] = useState("");
@@ -31,7 +30,7 @@ export function LinkWallet() {
   };
 
   const confirmLinking = async () => {
-    if (walletAddress && (isGoogleLoggedIn || googleID?.length > 5)) {
+    if (walletAddress && googleID?.length > 5) {
       try {
         setRewardAddressBAPI(walletAddress);
         alert("Failed to link wallet. Please try in some hours...");
@@ -63,7 +62,7 @@ export function LinkWallet() {
       }
     };
     getRaddress();
-  }, [isGoogleLoggedIn, googleID, isLogin]);
+  }, [googleID, isLogin]);
 
   if (rewardAddress?.length > 5) {
     return (
@@ -97,10 +96,7 @@ export function LinkWallet() {
       </h2>
       <div className="flex justify-center mt-6 mb-6">
         {googleID?.length > 5 ? (
-          <LoginButton
-            onlyGoogleLogin
-            setIsGoogleLoggedIn={setIsGoogleLoggedIn}
-          />
+          <LoginButton onlyGoogleLogin />
         ) : (
           <p className="text-white">Already connected with Google</p>
         )}
@@ -122,13 +118,11 @@ export function LinkWallet() {
         <button
           onClick={confirmLinking}
           className={
-            walletAddress && (isGoogleLoggedIn || googleID?.length > 5)
+            walletAddress && googleID?.length > 5
               ? buttonStyle
               : disabledButtonStyle
           }
-          disabled={
-            !walletAddress || !(isGoogleLoggedIn || googleID?.length > 5)
-          }
+          disabled={!walletAddress || !(googleID?.length > 5)}
         >
           Confirm
         </button>
