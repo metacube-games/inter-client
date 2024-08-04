@@ -42,6 +42,7 @@ export function LoginButton({
       getRefresh(false)
         .then((data: any) => {
           setPublicKeyFromCookies(data.playerData.publicKey);
+          console.log(data);
           setAccessToken(data.accessToken);
         })
         .catch((err) => console.log(err));
@@ -53,6 +54,7 @@ export function LoginButton({
     getRefresh(true)
       .then((data: any) => {
         setPublicKeyFromCookies(data.playerData.publicKey);
+        console.log(data);
         setInitialStates(data);
       })
       .catch((err) => console.log(err))
