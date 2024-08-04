@@ -44,6 +44,7 @@ export async function getRewardAddress() {
 }
 
 export async function setRewardAddressBAPI(address: string) {
+  console.log(address);
   return api
     .post("profile/address", {
       json: { address },
