@@ -187,7 +187,7 @@ const NFTCard: React.FC<{
       <>
         <Image
           className="w-full h-48 object-cover shadow-lg"
-          src={nft?.animation_url ?? ""}
+          src={nft?.image ?? ""}
           alt={nft?.name ?? "NFT"}
           width={150}
           height={192}
