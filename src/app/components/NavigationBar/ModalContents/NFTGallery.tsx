@@ -187,8 +187,10 @@ const NFTCard: React.FC<{
       <>
         <Image
           className="w-full h-48 object-cover shadow-lg"
-          src={nft?.image || ""}
+          src={nft?.image ?? ""}
           alt={nft?.name ?? "NFT"}
+          width={150}
+          height={192}
         />
         <div className="flex justify-between items-center bg-gray-800 bg-opacity-50 p-2">
           <span className="text-white">{nft?.name}</span>
