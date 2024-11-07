@@ -12,6 +12,7 @@ import {
 } from "@/app/backendAPI/backendAPI";
 import { setPublicKeyFromCookies } from "@/app/utils/starknet";
 import ReactDOM from "react-dom";
+import { useShallow } from "zustand/react/shallow";
 
 const REFRESH_INTERVAL = 270000;
 // add argument for only google login
@@ -22,12 +23,12 @@ export function LoginButton({
 }) {
   const { open, handleOpen, handleClose } = useOpenConnexionModal();
   const { isConnected, isAuthLoading, address, walletAddress } = useAuthStore(
-    (state) => ({
+    useShallow((state) => ({
       isConnected: state.isConnected,
       isAuthLoading: state.isAuthLoading,
       walletAddress: state.walletAddress,
       address: state.address,
-    })
+    }))
   );
 
   const intervalSettedRef = useRef<boolean>(false);
@@ -107,7 +108,7 @@ export function LoginButton({
         SAG.setIsAuthLoading(false);
         handleClose();
       });
-  }, [handleAuth]);
+  }, [handleClose]);
 
   const handleGoogleLogin = useCallback(
     (credentialResponse: { credential: string }) => {
@@ -122,7 +123,7 @@ export function LoginButton({
           handleClose();
         });
     },
-    [handleAuth]
+    [handleClose]
   );
 
   const displayContent = useCallback(() => {

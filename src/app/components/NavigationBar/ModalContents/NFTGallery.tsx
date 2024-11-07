@@ -5,6 +5,7 @@ import { RpcProvider, Contract } from "starknet";
 // import { getRewardAddress } from "../../../API/backendAPI";
 import { useAuthStore } from "@/app/store/authStore";
 import { getRewardAddress } from "@/app/backendAPI/backendAPI";
+import Image from "next/image";
 
 const MGenesisAddress =
   "0x007ca74fd0a9239678cc6355e38ac1e7820141501727ae37f9c733e5ed1c3592";
@@ -112,7 +113,7 @@ export const NFTGallery: React.FC = () => {
   if (error) {
     return (
       <p className="text-red-500 text-center">
-        Oops! We couldn't load the Assets. Please try again in a moment.
+        Oops! We could not load the Assets. Please try again in a moment.
       </p>
     );
   }
@@ -184,10 +185,10 @@ const NFTCard: React.FC<{
       </div>
     ) : (
       <>
-        <img
+        <Image
           className="w-full h-48 object-cover shadow-lg"
-          src={nft?.image}
-          alt={nft?.name}
+          src={nft?.image || ""}
+          alt={nft?.name ?? "NFT"}
         />
         <div className="flex justify-between items-center bg-gray-800 bg-opacity-50 p-2">
           <span className="text-white">{nft?.name}</span>
@@ -197,3 +198,6 @@ const NFTCard: React.FC<{
     )}
   </div>
 );
+
+NFTGrid.displayName = "NFTGrid";
+NFTCard.displayName = "NFTCard";
