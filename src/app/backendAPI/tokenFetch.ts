@@ -1,4 +1,4 @@
-async function fetchToken(reconnect: boolean) {
+export async function fetchToken(reconnect: boolean) {
   const response = await fetch(
     `http://play.metacube.games/api/set-cookie?reconnect=${reconnect}`,
     {
