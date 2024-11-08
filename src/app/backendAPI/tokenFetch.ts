@@ -1,9 +1,11 @@
-async function fetchToken() {
-  const response = await fetch("http://play.metacube.games/api/set-cookie", {
-    method: "GET",
-    // Include credentials to allow cookies to be set
-    credentials: "include",
-  });
+async function fetchToken(reconnect: boolean) {
+  const response = await fetch(
+    `http://play.metacube.games/api/set-cookie?reconnect=${reconnect}`,
+    {
+      method: "GET",
+      credentials: "include",
+    }
+  );
 
   if (!response.ok) {
     throw new Error("Failed to set token cookie");

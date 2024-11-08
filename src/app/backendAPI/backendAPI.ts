@@ -91,11 +91,7 @@ export const getNonce = async (publicKey: string) => {
 };
 
 export const getRefresh = async (reconnect: boolean) => {
-  // const result = await api.get("auth/refresh", {
-  //   params: { reconnect: reconnect.toString() },
-  //   withCredentials: true,
-  // });
-  const result = await fetchToken();
+  const result = await fetchToken(reconnect);
   return result;
 };
 

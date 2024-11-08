@@ -10,7 +10,7 @@ export default async function handler(
 ) {
   try {
     // Define your parameters (assuming `reconnect` is part of req.query)
-    const reconnect = req.query.reconnect || "false"; // Default to 'false' if not provided
+    const reconnect = req?.query?.reconnect || "false"; // Default to 'false' if not provided
 
     // Make a request to the backend to refresh the token
     const backendResponse = await axios.get(`${BASE_URL}auth/refresh`, {
