@@ -8,9 +8,25 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  // Allow credentials and specific origin for cookies to be set
+  res.setHeader(
+    "Access-Control-Allow-Origin",
+    "https://your-frontend-domain.com"
+  );
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+
+  if (req.method === "OPTIONS") {
+    // Handle CORS preflight request
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+    res.status(200).end();
+    return;
+  }
+
   try {
     const reconnect = req.query.reconnect || "false";
 
+    // Continue with the token fetching and cookie setting as before
     const backendResponse = await axios.get(`${BASE_URL}auth/refresh`, {
       params: { reconnect },
       withCredentials: true,
@@ -28,8 +44,8 @@ export default async function handler(
       "Set-Cookie",
       cookie.serialize("userToken", token, {
         httpOnly: true,
-        secure: true, // Ensure secure in production
-        sameSite: "none", // Set to 'none' if cross-origin
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "none", // Cross-site cookie setting
         path: "/",
       })
     );
