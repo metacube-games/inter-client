@@ -28,7 +28,7 @@ function setAccessTokenCookie(token: string) {
 
 export function setAccessToken(token: string) {
   accessToken = token;
-  setAccessTokenCookie(token);
+  // setAccessTokenCookie(token);
 }
 
 export function getAccessToken() {
