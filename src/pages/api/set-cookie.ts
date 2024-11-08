@@ -12,14 +12,6 @@ export default async function handler(
   res.setHeader("Access-Control-Allow-Origin", "https://play.metacube.games/");
   res.setHeader("Access-Control-Allow-Credentials", "true");
 
-  if (req.method === "OPTIONS") {
-    // Handle CORS preflight request
-    res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-    res.status(200).end();
-    return;
-  }
-
   try {
     const reconnect = req.query.reconnect || "false";
 
