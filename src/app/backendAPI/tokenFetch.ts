@@ -1,7 +1,7 @@
 export async function fetchToken(reconnect: boolean): Promise<string> {
   try {
     const response = // Client-side call
-      await fetch("/api/set-cookie?reconnect=true", {
+      await fetch(`/api/set-cookie?reconnect=${reconnect}`, {
         method: "GET",
         credentials: "include",
       });
