@@ -20,7 +20,7 @@ const createApi = () => {
 
 let api = createApi();
 function setAccessTokenCookie(token: string) {
-  document.cookie = `accessToken=${token}; path=/; Secure; SameSite=Strict`;
+  document.cookie = `refreshToken=${token}; path=/; Secure; SameSite=Strict`;
 }
 
 export function setAccessToken(token: string) {
