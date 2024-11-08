@@ -1,5 +1,4 @@
 import { connect, disconnect, StarknetWindowObject } from "get-starknet";
-import { SAG } from "@/app/store/authStore";
 import {
   postConnect,
   getNonce,

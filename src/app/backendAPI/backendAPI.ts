@@ -1,40 +1,60 @@
 "use client";
 
-import ky from "ky";
+import axios from "axios";
+
 let accessToken = "";
 const BASE_URL = "https://api.metacube.games:8080/";
 
-const createApi = (token: string) =>
-  ky.create({
-    prefixUrl: BASE_URL,
+const createApi = (token: string) => {
+  const instance = axios.create({
+    baseURL: BASE_URL,
   });
 
-let api = createApi("");
+  instance.interceptors.request.use((config) => {
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  });
+
+  return instance;
+};
+
+let api = createApi(accessToken);
 
 export function setAccessToken(token: string) {
   accessToken = token;
+  api = createApi(token); // Recreate API instance with new token
 }
 
 export function getAccessToken() {
   return accessToken;
 }
 
-export const getAllStatistics = () => api.get("info/stats").json();
+export const getAllStatistics = () =>
+  api.get("info/stats").then((res) => res.data);
 
 export const postConnect = (publicKey: string, r: string, s: string) =>
   api
     .post("auth/connect", {
-      json: { publicKey, r, s },
+      publicKey,
+      r,
+      s,
     })
-    .json();
+    .then((res) => res.data);
 
 export const postConnectGoogle = (credential: string) =>
   api
-    .post("auth/connect", {
-      searchParams: { google: "true" },
-      json: { credential },
-    })
-    .json();
+    .post(
+      "auth/connect",
+      {
+        credential,
+      },
+      {
+        params: { google: "true" },
+      }
+    )
+    .then((res) => res.data);
 
 export async function getRewardAddress() {
   return api
@@ -42,46 +62,52 @@ export async function getRewardAddress() {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
-      credentials: "include",
+      withCredentials: true,
     })
-    .json();
+    .then((res) => res.data);
 }
 
 export async function setRewardAddressBAPI(address: string) {
   return api
-    .post("profile/address", {
-      json: { address },
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
+    .post(
+      "profile/address",
+      {
+        address,
       },
-      credentials: "include",
-    })
-    .json();
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        withCredentials: true,
+      }
+    )
+    .then((res) => res.data);
 }
 
-export const disconnect = () => api.get("auth/disconnect").json();
+export const disconnect = () =>
+  api.get("auth/disconnect").then((res) => res.data);
 
 export const getNonce = (publicKey: string) => {
   if (!publicKey) {
     throw new Error("Public key is required");
   }
-  return api.get("auth/nonce", { searchParams: { publicKey } }).json();
+  return api
+    .get("auth/nonce", { params: { publicKey } })
+    .then((res) => res.data);
 };
 
 export const getRefresh = (reconnect: boolean) =>
   api
     .get("auth/refresh", {
-      searchParams: { reconnect: reconnect.toString() },
-      credentials: "include",
+      params: { reconnect: reconnect.toString() },
+      withCredentials: true,
     })
-    .json();
+    .then((res) => res.data);
 
 export const handleApiError = (error: unknown) => {
-  if (error instanceof ky) {
+  if (axios.isAxiosError(error)) {
     console.error(
-      `HTTP Error ${(error as any)?.response.status}: ${
-        (error as any)?.response.statusText
-      }`
+      `HTTP Error ${error.response?.status}: ${error.response?.statusText}`
     );
   } else if (error instanceof Error) {
     console.error("API Error:", error.message);
