@@ -40,6 +40,7 @@ export function LoginButton({
     intervalIDRef.current = setInterval(() => {
       getRefresh(false)
         .then((data: any) => {
+          console.log(data);
           setPublicKeyFromCookies(data?.playerData?.publicKey);
           if (data?.accessToken) setAccessToken(data?.accessToken);
         })
@@ -177,6 +178,7 @@ export function LoginButton({
 function setInitialStates(authData: any) {
   SAG.setIsConnected(true);
   const pb = authData?.playerData?.publicKey;
+  console.log(authData);
   setAccessToken(authData?.accessToken);
 
   if (pb) {

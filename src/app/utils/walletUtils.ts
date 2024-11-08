@@ -44,6 +44,7 @@ export async function connectToStarknet() {
       signature[1],
       signature[2]
     ).then((data: any) => {
+      console.log("data", data);
       if (data?.accessToken) setAccessToken(data.accessToken);
       return data;
     });
