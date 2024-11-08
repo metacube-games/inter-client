@@ -41,7 +41,7 @@ export default async function handler(
     }
 
     // Extract token and set it as a cookie
-    const token = backendResponse.data.token;
+    const token = backendResponse?.data?.accessToken;
     if (!token) {
       console.error(
         "Error: Token missing in backend response:",
