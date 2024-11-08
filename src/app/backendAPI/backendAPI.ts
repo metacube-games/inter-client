@@ -1,5 +1,3 @@
-"use client";
-
 import axios, { AxiosResponse } from "axios";
 
 let accessToken = "";
