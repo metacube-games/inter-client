@@ -1,5 +1,3 @@
-// app/cookiePage/page.tsx
-
 async function fetchToken() {
   const response = await fetch("http://play.metacube.games/api/set-cookie", {
     method: "GET",
