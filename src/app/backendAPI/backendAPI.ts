@@ -19,10 +19,13 @@ const createApi = () => {
 };
 
 let api = createApi();
+function setAccessTokenCookie(token: string) {
+  document.cookie = `accessToken=${token}; path=/; Secure; SameSite=Strict`;
+}
 
 export function setAccessToken(token: string) {
   accessToken = token;
-  api = createApi(); // Recreate API instance with new token
+  setAccessTokenCookie(token);
 }
 
 export function getAccessToken() {
