@@ -33,8 +33,14 @@ export default async function handler(
       // Set the token as a secure, HttpOnly cookie
       res.setHeader(
         "Set-Cookie",
-        `userToken=${token}; Path=/; HttpOnly; Secure; SameSite=Lax`
+        `userToken=${token}; Path=/; HttpOnly; Secure; SameSite=None`
       );
+      // On the server, allow credentials for cross-origin requests
+      res.setHeader(
+        "Access-Control-Allow-Origin",
+        "https://play.metacube.games/"
+      );
+      res.setHeader("Access-Control-Allow-Credentials", "true");
 
       return res.status(200).json({ message: "Token cookie set successfully" });
     } else {
