@@ -9,10 +9,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   // Allow credentials and specific origin for cookies to be set
-  res.setHeader(
-    "Access-Control-Allow-Origin",
-    "https://your-frontend-domain.com"
-  );
+  res.setHeader("Access-Control-Allow-Origin", "https://play.metacube.games/");
   res.setHeader("Access-Control-Allow-Credentials", "true");
 
   if (req.method === "OPTIONS") {
@@ -44,7 +41,7 @@ export default async function handler(
       "Set-Cookie",
       cookie.serialize("userToken", token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
+        secure: true,
         sameSite: "none", // Cross-site cookie setting
         path: "/",
       })
