@@ -1,4 +1,4 @@
-// pages/api/set-cookie.ts
+// app/pages/api/set-cookie.ts
 import type { NextApiRequest, NextApiResponse } from "next";
 import axios from "axios";
 
@@ -9,34 +9,47 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
-    // Define your parameters (assuming `reconnect` is part of req.query)
-    const reconnect = req?.query?.reconnect || "false"; // Default to 'false' if not provided
+    // Get reconnect parameter from the request query, default to 'false'
+    const reconnect = req.query.reconnect?.toString() || "false";
 
-    // Make a request to the backend to refresh the token
+    // Request token from backend
     const backendResponse = await axios.get(`${BASE_URL}auth/refresh`, {
       params: { reconnect },
       withCredentials: true, // Ensures cookies are included in the request if required
     });
 
-    // Check if the response is successful
+    // Check if the backend responded successfully
     if (backendResponse.status !== 200) {
       return res
         .status(backendResponse.status)
         .json({ error: "Failed to fetch token" });
     }
 
-    // Extract the token or cookies from the backend response
+    // Extract the token from the backend response data
     const token = backendResponse.data.token;
 
-    // Set the token as a cookie in the response
-    res.setHeader(
-      "Set-Cookie",
-      `userToken=${token}; Path=/; HttpOnly; Secure; SameSite=Strict`
-    );
+    // Ensure token exists before setting the cookie
+    if (token) {
+      // Set the token as a secure, HttpOnly cookie
+      res.setHeader(
+        "Set-Cookie",
+        `userToken=${token}; Path=/; HttpOnly; Secure; SameSite=Lax`
+      );
 
-    res.status(200).json({ message: "Token cookie set successfully" });
-  } catch (error) {
+      return res.status(200).json({ message: "Token cookie set successfully" });
+    } else {
+      // Handle case where token is missing from backend response
+      return res.status(500).json({ error: "Token not provided in response" });
+    }
+  } catch (error: any) {
+    // Log and handle errors, check if axios response is available
     console.error("Error fetching token from backend:", error);
-    res.status(500).json({ error: "Internal server error" });
+
+    const status = error.response?.status || 500;
+    const message =
+      error.response?.data?.error ||
+      "Internal server error while fetching token";
+
+    return res.status(status).json({ error: message });
   }
 }
