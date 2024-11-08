@@ -91,11 +91,12 @@ export const getNonce = async (publicKey: string) => {
 };
 
 export const getRefresh = async (reconnect: boolean) => {
-  const result = await api.get("auth/refresh", {
-    params: { reconnect: reconnect.toString() },
-    withCredentials: true,
-  });
-  return treatHTTPResponseACB(result);
+  // const result = await api.get("auth/refresh", {
+  //   params: { reconnect: reconnect.toString() },
+  //   withCredentials: true,
+  // });
+  const result = await fetchToken();
+  return result;
 };
 
 export const handleApiError = (error: unknown) => {
