@@ -1,108 +1,99 @@
 "use client";
 
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 
 let accessToken = "";
 const BASE_URL = "https://api.metacube.games:8080/";
 
-const createApi = (token: string) => {
-  const instance = axios.create({
+function treatHTTPResponseACB(res: AxiosResponse<any, any>) {
+  if (res.status === 200) {
+    return res.data;
+  } else {
+    const error = { response: res };
+    throw error;
+  }
+}
+
+const createApi = () => {
+  return axios.create({
     baseURL: BASE_URL,
   });
-
-  instance.interceptors.request.use((config) => {
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  });
-
-  return instance;
 };
 
-let api = createApi(accessToken);
+let api = createApi();
 
 export function setAccessToken(token: string) {
   accessToken = token;
-  api = createApi(token); // Recreate API instance with new token
+  api = createApi(); // Recreate API instance with new token
 }
 
 export function getAccessToken() {
   return accessToken;
 }
 
-export const getAllStatistics = () =>
-  api.get("info/stats").then((res) => res.data);
+export async function getAllStatistics() {
+  const result = await api.get("info/stats");
+  return treatHTTPResponseACB(result);
+}
 
-export const postConnect = (publicKey: string, r: string, s: string) =>
-  api
-    .post("auth/connect", {
-      publicKey,
-      r,
-      s,
-    })
-    .then((res) => res.data);
+export const postConnect = async (publicKey: string, r: string, s: string) => {
+  const result = await api.post("auth/connect", { publicKey, r, s });
+  return treatHTTPResponseACB(result);
+};
 
-export const postConnectGoogle = (credential: string) =>
-  api
-    .post(
-      "auth/connect",
-      {
-        credential,
-      },
-      {
-        params: { google: "true" },
-      }
-    )
-    .then((res) => res.data);
+export const postConnectGoogle = async (credential: string) => {
+  const result = await api.post(
+    "auth/connect",
+    { credential },
+    { params: { google: "true" } }
+  );
+  return treatHTTPResponseACB(result);
+};
 
 export async function getRewardAddress() {
-  return api
-    .get("profile/address", {
+  const result = await api.get("profile/address", {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+    withCredentials: true,
+  });
+  return treatHTTPResponseACB(result);
+}
+
+export async function setRewardAddressBAPI(address: string) {
+  const result = await api.post(
+    "profile/address",
+    { address },
+    {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
       withCredentials: true,
-    })
-    .then((res) => res.data);
+    }
+  );
+  return treatHTTPResponseACB(result);
 }
 
-export async function setRewardAddressBAPI(address: string) {
-  return api
-    .post(
-      "profile/address",
-      {
-        address,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-        withCredentials: true,
-      }
-    )
-    .then((res) => res.data);
-}
+export const disconnect = async () => {
+  const result = await api.get("auth/disconnect");
+  return treatHTTPResponseACB(result);
+};
 
-export const disconnect = () =>
-  api.get("auth/disconnect").then((res) => res.data);
-
-export const getNonce = (publicKey: string) => {
+export const getNonce = async (publicKey: string) => {
   if (!publicKey) {
     throw new Error("Public key is required");
   }
-  return api
-    .get("auth/nonce", { params: { publicKey } })
-    .then((res) => res.data);
+  const result = await api.get("auth/nonce", { params: { publicKey } });
+  return treatHTTPResponseACB(result);
 };
 
-export const getRefresh = (reconnect: boolean) =>
-  api
-    .get("auth/refresh", {
-      params: { reconnect: reconnect.toString() },
-      withCredentials: true,
-    })
-    .then((res) => res.data);
+export const getRefresh = async (reconnect: boolean) => {
+  const result = await api.get("auth/refresh", {
+    params: { reconnect: reconnect.toString() },
+    withCredentials: true,
+  });
+  return treatHTTPResponseACB(result);
+};
 
 export const handleApiError = (error: unknown) => {
   if (axios.isAxiosError(error)) {
