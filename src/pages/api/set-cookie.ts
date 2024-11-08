@@ -8,15 +8,26 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  // Allow credentials and specific origin for cookies to be set
+  res.setHeader("Access-Control-Allow-Origin", "https://play.metacube.games"); // Ensure no trailing slash
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+
+  if (req.method === "OPTIONS") {
+    // Handle CORS preflight request
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+    res.status(200).end();
+    return;
+  }
+
   try {
     const reconnect = req.query.reconnect || "false";
 
     // Attempt to fetch the token from backend
-    const backendResponse = await axios.get(`${BASE_URL}auth/refresh`, {
-      params: { reconnect },
+    const backendResponse = await axios.get("auth/refresh", {
+      params: { reconnect: reconnect.toString() },
       withCredentials: true,
     });
-
     // Check if the backend response status is successful
     if (backendResponse.status !== 200) {
       console.error(
