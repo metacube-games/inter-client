@@ -37,12 +37,9 @@ export default async function handler(
 
     // Check if the backend response status is successful
     if (backendResponse?.status !== 200) {
-      console.error(
-        "Error: Non-200 response from backend:",
-        backendResponse?
-      );
+      console.error("Error: Non-200 response from backend:", backendResponse);
       return res
-        .status(backendResponse)
+        .status(backendResponse.status)
         .json({ error: "Failed to fetch token" });
     }
 
@@ -51,7 +48,7 @@ export default async function handler(
     if (!token) {
       console.error(
         "Error: Token missing in backend response:",
-        backendResponse 
+        backendResponse
       );
       return res.status(500).json({ error: "Token not found in response" });
     }
