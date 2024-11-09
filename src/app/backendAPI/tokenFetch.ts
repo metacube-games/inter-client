@@ -5,7 +5,13 @@ export async function fetchToken(reconnect: boolean): Promise<string> {
       credentials: "include",
     });
 
-    console.log(response);
+    if (!response.ok) {
+      // Handle specific HTTP error status if needed
+      throw new Error(
+        `Failed to set token cookie: ${response.status} ${response.statusText}`
+      );
+    }
+
     // Check if the response contains JSON
     let data;
     try {
