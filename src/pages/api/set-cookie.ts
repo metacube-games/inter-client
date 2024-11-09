@@ -29,27 +29,20 @@ export default async function handler(
   try {
     const reconnect = req?.query?.reconnect || "false";
 
-    // Extract cookies from the incoming request
-    const cookies = req.headers?.cookie || "";
-
     // Attempt to fetch the token from backend
     const backendResponse = await api.get("auth/refresh", {
       params: { reconnect: reconnect?.toString() },
       withCredentials: true,
-      headers: {
-        // Forward the cookies to the backend
-        Cookie: cookies,
-      },
     });
 
     // Check if the backend response status is successful
     if (backendResponse?.status !== 200) {
       console.error(
         "Error: Non-200 response from backend:",
-        backendResponse?.status
+        backendResponse?
       );
       return res
-        .status(backendResponse.status)
+        .status(backendResponse)
         .json({ error: "Failed to fetch token" });
     }
 
@@ -58,7 +51,7 @@ export default async function handler(
     if (!token) {
       console.error(
         "Error: Token missing in backend response:",
-        backendResponse?.data
+        backendResponse 
       );
       return res.status(500).json({ error: "Token not found in response" });
     }
