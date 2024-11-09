@@ -26,12 +26,24 @@ export default async function handler(
     }
 
     // Extract the token or cookies from the backend response
-    const token = backendResponse.data.token;
+    const token = backendResponse.data.accessToken;
+
+    // Allow credentials and specific origin for cookies to be set
+    res.setHeader("Access-Control-Allow-Origin", "https://play.metacube.games");
+    res.setHeader("Access-Control-Allow-Credentials", "true");
+
+    if (req.method === "OPTIONS") {
+      // Handle CORS preflight request
+      res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+      res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+      res.status(200).end();
+      return;
+    }
 
     // Set the token as a cookie in the response
     res.setHeader(
       "Set-Cookie",
-      `refreshToken=${token}; Path=/; HttpOnly; Secure; SameSite=None; Max-Age=86400;`
+      `refreshToken=${token}; Path=/; HttpOnly; Secure; SameSite=none; Max-Age=86400;`
     );
 
     res.status(200).json({ message: "Token cookie set successfully" });
