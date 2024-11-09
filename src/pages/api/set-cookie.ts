@@ -3,6 +3,12 @@ import axios from "axios";
 import cookie from "cookie";
 
 const BASE_URL = "https://api.metacube.games:8080/";
+const createApi = () => {
+  return axios.create({
+    baseURL: BASE_URL,
+  });
+};
+let api = createApi();
 
 export default async function handler(
   req: NextApiRequest,
@@ -24,7 +30,7 @@ export default async function handler(
     const reconnect = req.query.reconnect || "false";
 
     // Attempt to fetch the token from backend
-    const backendResponse = await axios.get("auth/refresh", {
+    const backendResponse = await api.get("auth/refresh", {
       params: { reconnect: reconnect.toString() },
       withCredentials: true,
     });
