@@ -59,7 +59,7 @@ export default async function handler(
       "Set-Cookie",
       cookie.serialize("userToken", token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production", // Only use Secure in production
+        secure: true, // Only use Secure in production
         sameSite: "none", // Cross-site cookie setting
         path: "/",
       })
