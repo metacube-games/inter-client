@@ -19,14 +19,14 @@ export default async function handler(
     });
 
     // Check if the response is successful
-    if (backendResponse.status !== 200) {
+    if (backendResponse?.status !== 200) {
       return res
         .status(backendResponse.status)
         .json({ error: "Failed to fetch token" });
     }
 
     // Extract the token or cookies from the backend response
-    const token = backendResponse.data.accessToken;
+    const token = backendResponse?.data?.accessToken;
 
     // Allow credentials and specific origin for cookies to be set
     res.setHeader("Access-Control-Allow-Origin", "https://play.metacube.games");
@@ -43,10 +43,11 @@ export default async function handler(
     // Set the token as a cookie in the response
     res.setHeader(
       "Set-Cookie",
-      `refreshToken=${token}; Path=/; HttpOnly; Secure; SameSite=none; Max-Age=86400;`
+      `refreshToken=${token}; path=/; HttpOnly; Secure; SameSite=none; Max-Age=86400`
     );
 
     res.status(200).json({ message: "Token cookie set successfully" });
+    return token;
   } catch (error) {
     console.error("Error fetching token from backend:", error);
     res.status(500).json({ error: "Internal server error" });
