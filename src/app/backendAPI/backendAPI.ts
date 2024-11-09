@@ -20,15 +20,9 @@ const createApi = () => {
 };
 
 let api = createApi();
-function setAccessTokenCookie(token: string) {
-  document.cookie = `refreshToken=${token}; path=/; Secure; SameSite=None; Max-Age=86400;`;
-}
-
-// document.cookie = `refreshToken=${token}; Path=/; Max-Age=86400; HttpOnly; Secure; SameSite=None`;
 
 export function setAccessToken(token: string) {
   accessToken = token;
-  // setAccessTokenCookie(token);
 }
 
 export function getAccessToken() {
@@ -92,8 +86,11 @@ export const getNonce = async (publicKey: string) => {
 };
 
 export const getRefresh = async (reconnect: boolean) => {
-  const result = await fetchToken(reconnect);
-  return result;
+  const result = await api.get("auth/refresh", {
+    params: { reconnect: reconnect.toString() },
+    withCredentials: true,
+  });
+  return treatHTTPResponseACB(result);
 };
 
 export const handleApiError = (error: unknown) => {
