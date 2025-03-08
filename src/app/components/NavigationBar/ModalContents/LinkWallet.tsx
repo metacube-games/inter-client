@@ -48,9 +48,9 @@ export function LinkWallet() {
   };
 
   const buttonStyle =
-    "bg-green-700 hover:bg-green-700 text-white font-bold py-2 px-4 rounded justify-center";
+    "bg-green-700 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-sm justify-center";
   const disabledButtonStyle =
-    "bg-gray-400 text-white font-bold py-2 px-4 rounded cursor-not-allowed";
+    "bg-gray-400 text-white font-bold py-2 px-4 rounded-sm cursor-not-allowed";
 
   useEffect(() => {
     getRewardAddress()

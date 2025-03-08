@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios";
-import { fetchToken } from "./tokenFetch";
+// import { fetchToken } from "./tokenFetch";
 
 let accessToken = "";
 const BASE_URL = "https://api.metacube.games:8080/";

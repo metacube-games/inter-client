@@ -6,43 +6,50 @@ import { NavigationBar } from "./components/NavigationBar/NavigationBar";
 import { useState } from "react";
 import { LegalLinks } from "./components/legals";
 
+// Social links array for easy mapping
+const socialLinks = [
+  "https://x.com/metacubeGames",
+  "https://discord.gg/FGV6HkMbNj",
+];
+
 const SocialLink = ({ url }: { url: string }) => (
   <SocialIcon
     url={url}
+    style={{ width: 96, height: 96 }}
     bgColor="transparent"
     fgColor="whitesmoke"
-    className="transition-transform duration-300 opacity-90 hover:opacity-100 hover:scale-105"
-    style={{
-      height: 96,
-      width: 96,
-      margin: "5px",
-      marginTop: "-25px",
-      marginBottom: "-5px",
-      padding: "0px",
-    }} // Increased size here
+    className="
+      transition-transform duration-300
+      opacity-90 hover:opacity-100
+      hover:scale-105
+      m-[5px] -mt-[25px] -mb-[5px] p-0
+    "
     target="_blank"
     rel="noopener noreferrer"
   />
 );
 
 export default function Home() {
-  const [ended, setEnded] = useState(true);
+  const [ended, setEnded] = useState(false);
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-20 relative">
+    <main className="relative flex min-h-screen flex-col items-center justify-between p-20">
+      {/* Navigation Bar & Legal Links */}
       <NavigationBar />
       <LegalLinks />
+
+      {/* Background Video/Image */}
       {ended ? (
-        <div className="absolute inset-0 w-full h-full object-cover circular-landscape brightness-90 ">
+        <div className="absolute inset-0 w-full h-full brightness-90">
           <Image
             src="/stoveArmy.jpg"
             fill
-            className="object-cover opacity-90 blur-sm brightness-50   "
             alt="Stove army spaceship"
+            className="object-cover opacity-90 blur-xs brightness-50"
           />
         </div>
       ) : (
-        <div className="absolute inset-0 w-full h-full object-cover circular-landscape brightness-75">
+        <div className="absolute inset-0 w-full h-full brightness-75">
           <video
             src="/Trim.mp4"
             autoPlay
@@ -54,33 +61,72 @@ export default function Home() {
         </div>
       )}
 
-      <div className="z-10 text-center mb-10">
-        <h1 className="text-xl  sm:text-2xl md:text-3xl font-bold mb-0 text-white">
-          {ended
-            ? "The Stove army will be back stronger and bigger soon!"
-            : "The Stove army spaceship is coming!"}
-        </h1>
+      {/* Main Heading Section (with blurred backdrop) */}
+      <div className="z-10 text-center mt-[40px] mb-[-40px] select-none">
+        <div className="relative inline-block px-4 py-2 bg-black/40 backdrop-blur-sm rounded-md">
+          <h1
+            className={`
+              text-xl sm:text-2xl md:text-3xl
+              font-extrabold italic tracking-wide
+              bg-clip-text text-transparent
+              bg-gradient-to-r from-green-400 to-green-500
+              drop-shadow-md
+              shadow-emerald-200
+              transition-all duration-500
+              ${!ended ? "  hover:drop-shadow-xl  animate-pulse" : ""}
+            `}
+          >
+            {ended ? (
+              <>
+                <strong>The Stove Army</strong> will be back <em>stronger</em>{" "}
+                and <em>bigger</em> soon!
+              </>
+            ) : (
+              <>
+                The Stove Army spaceship is <strong>coming!</strong>
+              </>
+            )}
+          </h1>
+        </div>
       </div>
 
+      {/* Logo */}
       <Image
         src="/metacube.svg"
         alt="Metacube logo"
         width={80}
         height={80}
-        className="mb-12 w-auto z-10 filter drop-shadow-lg"
-        style={{ filter: "drop-shadow(0 0 12px #0ec630)" }}
         priority
+        className="
+        mt-8  mb-4 w-auto z-10
+          filter drop-shadow-lg
+        "
+        style={{
+          filter: "drop-shadow(0 0 12px #0ec630)",
+        }}
       />
 
+      {/* Countdown */}
       <Countdown ended={ended} setEnded={setEnded} />
 
-      <div className="absolute bottom-2 flex flex-col items-center">
-        <h2 className="text-xl sm:text-3xl font-bold text-white mb-4">
-          Join us
+      {/* Extra spacing between Countdown & Join Us */}
+      <div className="mb-12" />
+
+      {/* Footer: Join Us */}
+      <div className="absolute bottom-4 flex flex-col items-center z-10">
+        <h2
+          className="
+            text-xl sm:text-3xl font-extrabold italic
+            text-white mb-4 tracking-widest uppercase
+             transition-colors duration-300
+          "
+        >
+          Join Us
         </h2>
-        <div className="flex space-x-24 ">
-          <SocialLink url="https://x.com/metacubeGames" />
-          <SocialLink url="https://discord.gg/FGV6HkMbNj" />
+        <div className="flex space-x-24">
+          {socialLinks.map((url) => (
+            <SocialLink key={url} url={url} />
+          ))}
         </div>
       </div>
     </main>

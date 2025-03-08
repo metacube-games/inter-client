@@ -1,53 +1,63 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
+// Initialize Inter font with Latin subset
 const inter = Inter({ subsets: ["latin"] });
 
+// Enhanced Metadata for SEO and Social Sharing
 export const metadata: Metadata = {
   metadataBase: new URL("https://play.metacube.games"),
-  title: "Metacube | Free-to-Play Blockchain Game on Starknet",
+  title: "Metacube Play | Free-to-Play Blockchain Game Countdown - Starknet",
   description:
-    "Compete in Metacube, a massive multiplayer Free-to-Play event game on Starknet. Collect assets and conquer the Metacube universe.",
+    "Join the countdown to Metacube’s launch on Starknet! Log in to view your assets and prepare for the ultimate free-to-play blockchain gaming experience.",
+  keywords: [
+    "Metacube",
+    "Starknet blockchain",
+    "free-to-play game",
+    "blockchain gaming",
+    "NFT assets",
+    "multiplayer blockchain game",
+    "Metacube countdown",
+    "digital collectibles",
+    "crypto gaming",
+    "Starknet NFT",
+  ],
+  authors: [{ name: "Clashware Sàrl", url: "https://metacube.games" }],
+  creator: "Clashware Sàrl",
+  publisher: "Metacube Games",
+  robots: "index, follow",
   openGraph: {
-    title: "Metacube | Free-to-Play Blockchain Game on Starknet",
+    title: "Metacube Play | Free-to-Play Blockchain Game Countdown",
     description:
-      "Compete, collect, and conquer in Metacube - the ultimate Free-to-Play blockchain game on Starknet.",
+      "Get ready for Metacube: a free-to-play multiplayer blockchain game on Starknet. Log in, check your assets, and join the launch countdown!",
     url: "https://play.metacube.games",
     siteName: "Metacube",
+    type: "website",
+    locale: "en_US",
     images: [
       {
-        url: "https://play.metacube.games/opengraph-image.jpeg",
+        url: "https://metacube.games/metadata-image.png",
         width: 1200,
         height: 630,
-        alt: "Metacube Game - Free-to-Play on Starknet",
+        alt: "Metacube Countdown - Free-to-Play Blockchain Game on Starknet",
       },
     ],
-    locale: "en_US",
-    type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Metacube | Free-to-Play Blockchain Game on Starknet",
+    title: "Metacube Play | Free-to-Play Blockchain Game Countdown",
     description:
-      "Compete, collect, and conquer in Metacube - the ultimate Free-to-Play blockchain game on Starknet.",
+      "Countdown to Metacube’s launch on Starknet! Log in to see your assets and join the free-to-play blockchain gaming revolution.",
+    creator: "@MetacubeGames",
     images: [
       {
-        url: "https://play.metacube.games/twitter-image.jpeg",
-        alt: "Metacube Game - Free-to-Play on Starknet",
+        url: "https://metacube.games/metadata-image.png",
+        alt: "Metacube Launch Countdown on Starknet",
       },
     ],
   },
-  keywords: [
-    "Metacube",
-    "Starknet",
-    "blockchain game",
-    "free-to-play",
-    "NFT",
-    "digital assets",
-    "multiplayer",
-  ],
   alternates: {
     canonical: "https://play.metacube.games",
     languages: {
@@ -56,6 +66,12 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+};
+
+// Root Layout Component
 export default function RootLayout({
   children,
 }: {
@@ -64,24 +80,47 @@ export default function RootLayout({
   return (
     <html lang="en" className="custom-scrollbar">
       <head>
+        {/* Preconnect to Google OAuth for faster login */}
+        <link rel="dns-prefetch" href="https://accounts.google.com" />
+        {/* Structured Data for Game and Countdown */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "VideoGame",
-              name: "Metacube",
-              description:
-                "A massive multiplayer Free-to-Play event game on Starknet",
-              genre: ["Blockchain", "Free-to-Play", "Multiplayer"],
-              gamePlatform: "Starknet",
-              offers: {
-                "@type": "Offer",
-                price: "0",
-                priceCurrency: "USD",
+            __html: JSON.stringify([
+              {
+                "@context": "https://schema.org",
+                "@type": "VideoGame",
+                name: "Metacube",
+                description:
+                  "Metacube is a free-to-play multiplayer blockchain game on Starknet. Log in to view your assets and join the countdown to launch!",
+                genre: ["Blockchain", "Free-to-Play", "Multiplayer"],
+                gamePlatform: "Starknet",
+                url: "https://play.metacube.games",
+                offers: {
+                  "@type": "Offer",
+                  price: "0",
+                  priceCurrency: "USD",
+                  availability: "https://schema.org/PreOrder",
+                },
               },
-              url: "https://play.metacube.games",
-            }),
+              {
+                "@context": "https://schema.org",
+                "@type": "Event",
+                name: "Metacube Game Launch Countdown",
+                description:
+                  "Countdown to the launch of Metacube, a free-to-play blockchain game on Starknet.",
+                url: "https://play.metacube.games",
+                startDate: "2025-03-15T00:00:00Z", // Replace with actual launch date
+                eventStatus: "https://schema.org/EventScheduled",
+                eventAttendanceMode:
+                  "https://schema.org/OnlineEventAttendanceMode",
+                organizer: {
+                  "@type": "Organization",
+                  name: "Metacube Games",
+                  url: "https://metacube.games",
+                },
+              },
+            ]),
           }}
         />
       </head>

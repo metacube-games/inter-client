@@ -29,7 +29,7 @@ export function Modal() {
 
   return ReactDOM.createPortal(
     <div
-      className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-10 backdrop-blur-sm"
+      className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-10 backdrop-blur-xs"
       onClick={handleClickOutside}
     >
       <div
@@ -56,7 +56,7 @@ export function Modal() {
           </svg>
         </button>
         <h2 className="text-2xl font-bold mb-4">{activeModal}</h2>
-        <div className="flex-grow overflow-auto min-w-[300px] stable-scrollbar max-h-[80vh]">
+        <div className="grow overflow-auto min-w-[300px] stable-scrollbar max-h-[80vh]">
           <ModalContent modalType={activeModal} />
         </div>
       </div>

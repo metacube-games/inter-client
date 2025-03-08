@@ -14,7 +14,7 @@ export function NavigationBar() {
       </Link>
       <div className="flex items-center space-x-4">
         <MenuItems />
-        <LoginButton />
+        {/* <LoginButton /> */}
       </div>
       <Modal />
     </nav>
