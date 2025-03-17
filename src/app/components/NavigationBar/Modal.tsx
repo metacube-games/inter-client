@@ -1,16 +1,17 @@
 import React, { useCallback, useRef } from "react";
 import { NFTGallery } from "./ModalContents/NFTGallery";
 import { StatsPanel } from "./ModalContents/StatsPanel";
+import { LinkWallet } from "./ModalContents/LinkWallet";
 import ReactDOM from "react-dom";
+import { useModalStore } from "@/app/store/connexionModalStore";
 
-export function Modal({
-  activeModal,
-  onClose,
-}: {
-  activeModal: string | null;
-  onClose: () => void;
-}) {
+export function Modal() {
+  const { activeModal, setActiveModal } = useModalStore();
   const modalRef = useRef<HTMLDivElement>(null);
+
+  const handleClose = useCallback(() => {
+    setActiveModal(null);
+  }, [setActiveModal]);
 
   const handleClickOutside = useCallback(
     (event: React.MouseEvent<HTMLDivElement>) => {
@@ -18,27 +19,25 @@ export function Modal({
         modalRef.current &&
         !modalRef.current.contains(event.target as Node)
       ) {
-        onClose();
+        handleClose();
       }
     },
-    [onClose]
+    [handleClose]
   );
 
   if (!activeModal) return null;
 
-  //  creat portal on body for the modal
-
   return ReactDOM.createPortal(
     <div
-      className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-10 backdrop-blur-sm"
+      className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-10 backdrop-blur-xs"
       onClick={handleClickOutside}
     >
       <div
         ref={modalRef}
-        className="bg-black bg-opacity-90 text-green-400 p-6 rounded-lg border border-green-400 h-[95vh] w-auto max-w-[90vw] flex flex-col relative"
+        className="bg-black bg-opacity-90 text-green-400 p-6 rounded-lg border border-green-400 h-[90vh] w-auto max-w-[90vw] flex flex-col relative"
       >
         <button
-          onClick={onClose}
+          onClick={handleClose}
           className="absolute top-2 right-2 text-green-400 hover:text-green-600"
         >
           <svg
@@ -57,7 +56,7 @@ export function Modal({
           </svg>
         </button>
         <h2 className="text-2xl font-bold mb-4">{activeModal}</h2>
-        <div className="flex-grow overflow-auto min-w-[300px] stable-scrollbar max-h-[80vh]">
+        <div className="grow overflow-auto min-w-[300px] stable-scrollbar max-h-[80vh]">
           <ModalContent modalType={activeModal} />
         </div>
       </div>
@@ -76,6 +75,8 @@ function ModalContent({ modalType }: { modalType: string }) {
       );
     case "Stats":
       return <StatsPanel />;
+    case "Link Wallet":
+      return <LinkWallet />;
     default:
       return null;
   }

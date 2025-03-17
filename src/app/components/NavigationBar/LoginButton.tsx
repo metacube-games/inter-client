@@ -12,60 +12,79 @@ import {
 } from "@/app/backendAPI/backendAPI";
 import { setPublicKeyFromCookies } from "@/app/utils/starknet";
 import ReactDOM from "react-dom";
+import { useShallow } from "zustand/react/shallow";
 
+// Refresh interval in ms (4.5 minutes here)
 const REFRESH_INTERVAL = 270000;
 
-export function LoginButton() {
+// The main Login component
+export function LoginButton({
+  onlyGoogleLogin = false,
+}: {
+  onlyGoogleLogin?: boolean;
+}) {
   const { open, handleOpen, handleClose } = useOpenConnexionModal();
   const { isConnected, isAuthLoading, address, walletAddress } = useAuthStore(
-    (state) => ({
+    useShallow((state) => ({
       isConnected: state.isConnected,
       isAuthLoading: state.isAuthLoading,
       walletAddress: state.walletAddress,
       address: state.address,
-    })
+    }))
   );
 
-  const intervalSettedRef = useRef<boolean>(false);
-  const intervalIDRef = useRef<any | null>(null);
+  // State to track whether we've initialized the refresh interval
+  const hasIntervalBeenSetRef = useRef(false);
+  const refreshIntervalIDRef = useRef<number | null>(null);
 
-  const setupRefreshInterval = useCallback(() => {
-    if (intervalIDRef.current !== null) return;
+  // Function to set up a periodic refresh
+  const initiateRefreshInterval = useCallback(() => {
+    // Avoid re-creating the interval if it's already set
+    if (refreshIntervalIDRef.current !== null) return;
 
-    intervalIDRef.current = setInterval(() => {
+    const id = window.setInterval(() => {
       getRefresh(false)
         .then((data: any) => {
-          setPublicKeyFromCookies(data.playerData.publicKey);
-          setAccessToken(data.accessToken);
+          setPublicKeyFromCookies(data?.playerData?.publicKey);
+          if (data?.accessToken) {
+            // Consider storing tokens in http-only secure cookies
+            setAccessToken(data?.accessToken);
+          }
         })
-        .catch((err) => console.log(err));
+        .catch((err) => console.error("Refresh token error:", err));
     }, REFRESH_INTERVAL);
+
+    refreshIntervalIDRef.current = id;
   }, []);
 
+  // On mount, do an immediate refresh and set up the interval
   useEffect(() => {
-    if (intervalSettedRef.current) return;
-    getRefresh(true)
-      .then((data: any) => {
-        setPublicKeyFromCookies(data.playerData.publicKey);
-        setInitialStates(data);
-      })
-      .catch((err) => console.log(err))
-      .finally(() => {
-        SAG.setIsAuthLoading(false);
-      });
-    if (isConnected) setupRefreshInterval();
-    intervalSettedRef.current = true;
-    SAG.setIsAuthLoading(true);
+    if (!hasIntervalBeenSetRef.current) {
+      SAG.setIsAuthLoading(true);
 
+      getRefresh(true)
+        .then((data: any) => {
+          setPublicKeyFromCookies(data?.playerData?.publicKey);
+          setInitialStates(data);
+        })
+        .catch((err) => console.error("Immediate refresh error:", err))
+        .finally(() => {
+          SAG.setIsAuthLoading(false);
+        });
+
+      initiateRefreshInterval();
+      hasIntervalBeenSetRef.current = true;
+    }
+
+    // Cleanup: clear the interval on unmount
     return () => {
-      if (intervalIDRef.current !== null) {
-        clearInterval(intervalIDRef.current);
-        intervalIDRef.current = null;
-        SAG.setIsAuthLoading(false);
+      if (refreshIntervalIDRef.current) {
+        clearInterval(refreshIntervalIDRef.current);
       }
     };
-  }, [setupRefreshInterval, intervalSettedRef]);
+  }, [initiateRefreshInterval]);
 
+  // Logout function
   const handleLogout = useCallback(async () => {
     try {
       await disconnect();
@@ -73,112 +92,134 @@ export function LoginButton() {
         await disconnectWallet();
       }
       SAG.reset();
+      setAccessToken("");
+      // Also consider clearing any interval or cookies here if needed
     } catch (error) {
       console.error("Logout failed:", error);
       toast.error("Logout failed");
     }
   }, [walletAddress]);
 
-  const handleAuth = useCallback(
-    async (authFunction: () => any) => {
-      try {
-        SAG.setIsAuthLoading(true);
-        const authData = await authFunction();
-        setInitialStates(authData);
-      } catch (error) {
-        handleAuthenticationError(error);
-      } finally {
-        handleClose();
-        SAG.setIsAuthLoading(false);
+  // Connect with StarkNet wallet
+  const handleWalletConnect = useCallback(async () => {
+    SAG.setIsAuthLoading(true);
+    try {
+      const data = await connectToStarknet();
+      if (data) {
+        setInitialStates(data);
       }
+    } catch (err) {
+      console.error("Wallet connect error:", err);
+      toast.error("Wallet connection failed");
+    } finally {
+      SAG.setIsAuthLoading(false);
+      handleClose();
+    }
+  }, [handleClose]);
+
+  // Google OAuth callback
+  const handleGoogleLogin = useCallback(
+    (credentialResponse: { credential: string }) => {
+      SAG.setIsAuthLoading(true);
+      postConnectGoogle(credentialResponse?.credential)
+        .then((data: any) => {
+          if (data) {
+            setInitialStates(data);
+          }
+        })
+        .catch((err) => {
+          console.error("Google login error:", err);
+          toast.error("Google login failed");
+        })
+        .finally(() => {
+          SAG.setIsAuthLoading(false);
+          handleClose();
+        });
     },
     [handleClose]
   );
 
-  const handleWalletConnect = useCallback(
-    () => handleAuth(connectToStarknet),
-    [handleAuth]
-  );
-
-  const handleGoogleLogin = useCallback(
-    (credentialResponse: { credential: string }) => {
-      if (credentialResponse.credential) {
-        handleAuth(() => postConnectGoogle(credentialResponse.credential));
-      }
-    },
-    [handleAuth]
-  );
-
-  const displayContent = useCallback(() => {
-    if (isAuthLoading) {
-      return <LoadingSpinner />;
-    }
+  // Dynamic button content
+  const displayContent = () => {
+    if (isAuthLoading) return <LoadingSpinner />;
     if (isConnected) {
-      return address?.length > 6
+      // Show short version of address
+      return address && address.length > 6
         ? `${address.slice(0, 3)}...${address.slice(-2)}`
         : address;
     }
     return "Login";
-  }, [isAuthLoading, isConnected, address]);
+  };
 
   return (
     <>
       <Toaster position="top-right" toastOptions={{ duration: 3000 }} />
-      <button
-        onClick={isConnected ? handleLogout : handleOpen}
-        disabled={isAuthLoading}
-        className="px-4 py-2 rounded transition duration-150 ease-in-out bg-black bg-opacity-50 hover:bg-opacity-70 text-green-400"
-      >
-        {displayContent()}
-      </button>
-      {open &&
-        ReactDOM.createPortal(
-          <LoginModal
-            onClose={handleClose}
-            onGoogleLogin={handleGoogleLogin}
-            onWalletConnect={handleWalletConnect}
-          />,
-          document.body
-        )}
+      {onlyGoogleLogin ? (
+        <div className="bg-black p-1 rounded-md shadow-xl">
+          <GoogleLogin
+            onSuccess={handleGoogleLogin as any}
+            onError={() => toast.error("Google login failed")}
+          />
+        </div>
+      ) : (
+        <>
+          <button
+            onClick={isConnected ? handleLogout : handleOpen}
+            disabled={isAuthLoading}
+            className="px-4 py-2 rounded-sm transition duration-150 ease-in-out bg-black bg-opacity-50 hover:bg-opacity-70 text-green-400"
+          >
+            {displayContent()}
+          </button>
+          {open &&
+            ReactDOM.createPortal(
+              <LoginModal
+                onClose={handleClose}
+                handleGoogleLogin={handleGoogleLogin}
+                onWalletConnect={handleWalletConnect}
+              />,
+              document.body
+            )}
+        </>
+      )}
     </>
   );
 }
 
+// Helper to set store states
 function setInitialStates(authData: any) {
   SAG.setIsConnected(true);
-  const pb = authData.playerData.publicKey;
-  setAccessToken(authData.accessToken);
+  setAccessToken(authData?.accessToken);
 
-  if (pb) {
-    SAG.setIsConnected(true);
-    SAG.setGoogleId(pb.startsWith("google") ? pb : "");
-    SAG.setWalletAddress(pb.startsWith("google") ? "" : pb);
-    SAG.setAddress(pb);
+  const pb = authData?.playerData?.publicKey;
+  if (!pb) return;
 
-    SAG.setUsername(authData.playerData.username);
-    SAG.setIsStarknetID(authData.playerData.username?.includes(".stark"));
-  }
+  SAG.setGoogleId(pb.startsWith("google") ? pb : "");
+  SAG.setWalletAddress(pb.startsWith("google") ? "" : pb);
+  SAG.setAddress(pb);
+  SAG.setUsername(authData?.playerData?.username);
+  SAG.setIsStarknetID(authData?.playerData?.username?.includes(".stark"));
 }
 
+// Modal for login (Google or wallet)
 function LoginModal({
   onClose,
-  onGoogleLogin,
+  handleGoogleLogin,
   onWalletConnect,
 }: {
   onClose: () => void;
-  onGoogleLogin: (credentialResponse: { credential: string }) => void;
+  handleGoogleLogin: (credentialResponse: { credential: string }) => void;
   onWalletConnect: () => void;
 }) {
+  // Close on escape
   useEffect(() => {
-    const handleEscape = (event: { key: string }) => {
-      if (event.key === "Escape") {
-        onClose();
-      }
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") onClose();
     };
     document.addEventListener("keydown", handleEscape);
     return () => document.removeEventListener("keydown", handleEscape);
   }, [onClose]);
 
+  // Modal overlay & content
   return (
     <div
       className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10"
@@ -191,12 +232,12 @@ function LoginModal({
         <h2 className="text-2xl font-bold mb-4 text-green-400">Login</h2>
         <div className="space-y-4">
           <GoogleLogin
-            onSuccess={onGoogleLogin as any}
+            onSuccess={handleGoogleLogin as any}
             onError={() => toast.error("Google login failed")}
           />
           <button
             onClick={onWalletConnect}
-            className="w-full px-4 py-2 bg-green-400 text-black rounded hover:bg-green-500 transition duration-150 ease-in-out"
+            className="w-full px-4 py-2 bg-green-400 text-black rounded-sm hover:bg-green-500 transition duration-150 ease-in-out"
           >
             Connect with digital wallet
           </button>
@@ -206,6 +247,7 @@ function LoginModal({
   );
 }
 
+// Simple spinner
 function LoadingSpinner() {
   return (
     <svg
@@ -229,20 +271,4 @@ function LoadingSpinner() {
       />
     </svg>
   );
-}
-
-function handleAuthenticationError(err: any) {
-  if (err.response?.status === 403) {
-    toast.error("You are banned");
-    window.document.exitPointerLock();
-  } else if (err.response?.status === 404) {
-    toast.error("Please deploy your walllet first");
-  } else if (err.response?.status === 401) {
-    toast.error(
-      "Issue verifying signature, if yous jsut deployed your wallet, please wait a few minutes, and try again"
-    );
-  } else {
-    toast.error("Unexpected error occurred");
-    console.log("Unexpected error:", err);
-  }
 }

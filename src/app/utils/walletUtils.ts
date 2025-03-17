@@ -1,6 +1,9 @@
 import { connect, disconnect, StarknetWindowObject } from "get-starknet";
-import { SAG } from "@/app/store/authStore";
-import { postConnect, getNonce } from "../backendAPI/backendAPI";
+import {
+  postConnect,
+  getNonce,
+  setAccessToken,
+} from "../backendAPI/backendAPI";
 import { getPublicKey, setPublicKey } from "./starknet";
 
 export const CHAIN_IDS = {
@@ -27,15 +30,22 @@ export async function connectToStarknet() {
       signature.unshift(0);
     }
     if (signature.length === 5) {
-      signature[1] = signature[1] + '|' + signature[2];
-      signature[2] = signature[3] + '|' + signature[4];
+      signature[1] = signature[1] + "|" + signature[2];
+      signature[2] = signature[3] + "|" + signature[4];
     }
     if (signature.length === 6) {
       signature[1] = signature[4];
       signature[2] = signature[5];
     }
 
-    const data = await postConnect(getPublicKey(), signature[1], signature[2]);
+    const data = await postConnect(
+      getPublicKey(),
+      signature[1],
+      signature[2]
+    ).then((data: any) => {
+      if (data?.accessToken) setAccessToken(data.accessToken);
+      return data;
+    });
     return data;
   }
   return null;

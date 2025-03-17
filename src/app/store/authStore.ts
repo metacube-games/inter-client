@@ -11,7 +11,6 @@ interface AuthState {
   username: string;
   isStarknetID: boolean;
   publicKey: string;
-  accessToken: string;
 }
 
 const initialState: AuthState = {
@@ -23,7 +22,6 @@ const initialState: AuthState = {
   username: "",
   isStarknetID: false,
   publicKey: "",
-  accessToken: "",
 };
 
 type SetterActions = {

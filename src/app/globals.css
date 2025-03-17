@@ -1,55 +1,81 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 0, 255, 219;
-  --background-end-rgb: 0, 255, 166;
-  background-color: black;
+@theme {
+  --background-image-gradient-radial: radial-gradient(var(--tw-gradient-stops));
+  --background-image-gradient-conic: conic-gradient(
+    from 180deg at 50% 50%,
+    var(--tw-gradient-stops)
+  );
 }
 
-body {
-  color: rgba(var(--foreground-rgb), 0.2);
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgba(var(--background-end-rgb), 0.2)
-    )
-    rgba(var(--background-start-rgb), 0.2);
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+}
+
+@utility text-balance {
+  text-wrap: balance;
+}
+
+@utility stable-scrollbar {
+  /* Customizing the scrollbar */
+  scrollbar-gutter: stable;
+}
+
+@utility custom-scrollbar {
+  /* For Webkit browsers like Chrome, Safari */
+  /* gutterbottom */
+  &::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #000000;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #22c55e;
+    border-radius: 5px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #16a34a;
+  }
+
+  /* For Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: #22c55e #000000;
 }
 
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
+  :root {
+    --foreground-rgb: 0, 0, 0;
+    --background-start-rgb: 0, 255, 219;
+    --background-end-rgb: 0, 255, 166;
+    background-color: black;
   }
-  /* Customizing the scrollbar */
-  .stable-scrollbar {
-    scrollbar-gutter: stable;
-  }
-  .custom-scrollbar {
-    /* For Webkit browsers like Chrome, Safari */
-    /* gutterbottom */
-    &::-webkit-scrollbar {
-      width: 10px;
-      height: 10px;
-    }
 
-    &::-webkit-scrollbar-track {
-      background: #000000;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background: #22c55e;
-      border-radius: 5px;
-    }
-
-    &::-webkit-scrollbar-thumb:hover {
-      background: #16a34a;
-    }
-
-    /* For Firefox */
-    scrollbar-width: thin;
-    scrollbar-color: #22c55e #000000;
+  body {
+    color: rgba(var(--foreground-rgb), 0.2);
+    background: linear-gradient(
+        to bottom,
+        transparent,
+        rgba(var(--background-end-rgb), 0.2)
+      )
+      rgba(var(--background-start-rgb), 0.2);
   }
 }

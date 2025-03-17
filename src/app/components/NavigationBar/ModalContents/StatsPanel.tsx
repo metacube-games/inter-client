@@ -64,7 +64,7 @@ export function StatsPanel() {
           type="text"
           value={searchTerm}
           onChange={handleSearch}
-          className="px-4 py-2 border border-green-400 bg-black text-green-400 rounded"
+          className="px-4 py-2 border border-green-400 bg-black text-green-400 rounded-sm"
           placeholder="Search player"
         />
       </div>
@@ -113,7 +113,7 @@ function StatsTable({
   });
 
   return (
-    <div className="w-full bg-black border border-green-400 rounded shadow-lg p-4 flex-grow overflow-auto custom-scrollbar">
+    <div className="w-full bg-black border border-green-400 rounded-sm shadow-lg p-4 grow overflow-auto custom-scrollbar">
       <div className="min-w-max  bg-black z-10 ">
         <div className="flex w-full mb-2 sticky top-0 bg-black z-10 pb-2 shadow-[0_-40px_60px_40px_rgb(0,0,0)]">
           {COLUMNS.map(({ title, width }) => (
