@@ -19,4 +19,4 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
-          script: /home/metacube/deploy.sh
+          script: /home/metacube/deploy-inter-client.sh
