@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 
 let accessToken = "";
-const BASE_URL = "https://api.metacube.games/";
+const BASE_URL = "https://api.metacube.games/api/v1/";
 
 function treatHTTPResponseACB(res: AxiosResponse<any, any>) {
   if (res.status === 200) {
