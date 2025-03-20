@@ -372,12 +372,14 @@ export function LinkWallet() {
               disabled={
                 !(walletAddress && walletAddress.length > 5) ||
                 !(googleID?.length > 5) ||
-                isLoading
+                isLoading ||
+                rewardAddress?.length > 5
               }
               className={
                 !(walletAddress && walletAddress.length > 5) ||
                 !(googleID?.length > 5) ||
-                isLoading
+                isLoading ||
+                rewardAddress?.length > 5
                   ? disabledButtonStyle
                   : buttonStyle
               }
@@ -406,10 +408,12 @@ export function LinkWallet() {
                   ></path>
                 </svg>
               ) : null}
-              Confirm Wallet Linking
+              {rewardAddress?.length > 5
+                ? "Reward address linked"
+                : "Confirm Wallet Linking"}
             </button>
             {!(walletAddress && walletAddress.length > 5) ||
-            !(googleID?.length > 5) ? (
+            (!(googleID?.length > 5) && !(rewardAddress?.length > 5)) ? (
               <p className="text-xs text-yellow-500">
                 {!googleID?.length
                   ? "Please log in with Google first"
