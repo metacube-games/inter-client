@@ -226,7 +226,7 @@ export function LinkWallet() {
               alt=""
               width={60}
               height={50}
-              style={{ height: "auto", width: "auto" }}
+              style={{ height: "auto" }}
               className="mb-2"
             />
             <p className="text-white text-center">Argent X</p>
@@ -264,8 +264,10 @@ export function LinkWallet() {
             Log your Google account
           </legend>
           <div className="flex justify-center mt-4 mb-2">
+            <LoginButton onlyGoogleLogin />
+
             {!(googleID?.length > 5) ? (
-              <LoginButton onlyGoogleLogin />
+              <></> // <LoginButton onlyGoogleLogin />
             ) : (
               <div className="flex items-center text-white bg-green-900 bg-opacity-50 px-4 py-2 rounded-md">
                 <svg

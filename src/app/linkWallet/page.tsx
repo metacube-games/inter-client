@@ -37,20 +37,9 @@ export default function LinkWalletPage() {
               legacyBehavior
               aria-label="Back to Metacube homepage"
             >
-              <a className="text-white text-lg hover:text-gray-300 transition duration-150 ease-in-out group flex items-center focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2 focus:ring-offset-black rounded-md p-1">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5 mr-1 group-hover:transform group-hover:-translate-x-1 transition-transform duration-200"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                <span>Back to Metacube</span>
+              <a className="text-white text-lg hover:text-gray-300 transition duration-150 ease-in-out">
+                <span className="font-bold text-white">&lt;</span> Back to
+                Metacube
               </a>
             </Link>
             <div className="flex space-x-4">
@@ -88,6 +77,7 @@ export default function LinkWalletPage() {
                 alt=""
                 width={64}
                 height={64}
+                style={{ height: "auto" }}
                 className="object-contain"
                 aria-hidden="true"
               />
