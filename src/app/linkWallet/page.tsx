@@ -13,7 +13,7 @@ export default function LinkWalletPage() {
         {/* Header with improved accessibility */}
         <header className="relative z-10 w-full">
           <nav
-            className="flex justify-between items-center p-6"
+            className="flex justify-between items-center p-6 pb-2"
             aria-label="Main Navigation"
           >
             <Link
@@ -52,7 +52,7 @@ export default function LinkWalletPage() {
         {/* Main content section with ID for skip link */}
         <section
           id="main-content"
-          className="relative z-10 bg-black bg-opacity-80 text-green-400 p-2 sm-p-8 rounded-lg border border-green-400 max-w-3xl mx-auto my-12 md:my-24 shadow-lg shadow-green-900/20 w-[95%] md:w-auto"
+          className="relative z-10 bg-black bg-opacity-80 text-green-400 p-2 py-4 sm:py-8 sm:p-8 rounded-lg border border-green-400 max-w-3xl mx-auto my-12 md:my-24 shadow-lg shadow-green-900/20 w-[95%] md:w-auto"
           aria-labelledby="wallet-linking-title"
         >
           <div className="flex items-center justify-center mb-8">
