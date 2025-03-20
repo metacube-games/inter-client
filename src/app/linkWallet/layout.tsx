@@ -1,3 +1,4 @@
+import { GoogleOAuthProvider } from "@react-oauth/google";
 import type { Metadata, Viewport } from "next";
 
 export const metadata: Metadata = {
@@ -45,5 +46,9 @@ export default function LinkWalletLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return children;
+  return (
+    <GoogleOAuthProvider clientId="285204904976-ps77qml7rfllm9scd78fsqgik5tscbkn.apps.googleusercontent.com">
+      {children}
+    </GoogleOAuthProvider>
+  );
 }
