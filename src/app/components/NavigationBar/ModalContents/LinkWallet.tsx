@@ -412,8 +412,9 @@ export function LinkWallet() {
                 ? "Reward address linked"
                 : "Confirm Wallet Linking"}
             </button>
-            {!(walletAddress && walletAddress.length > 5) ||
-            (!(googleID?.length > 5) && !(rewardAddress?.length > 5)) ? (
+            {(!(walletAddress && walletAddress.length > 5) ||
+              !(googleID?.length > 5)) &&
+            !(rewardAddress?.length > 5) ? (
               <p className="text-xs text-yellow-500">
                 {!googleID?.length
                   ? "Please log in with Google first"
