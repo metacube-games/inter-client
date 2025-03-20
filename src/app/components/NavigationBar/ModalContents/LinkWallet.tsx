@@ -226,205 +226,208 @@ export function LinkWallet() {
             )}
           </div>
         </fieldset>
-
-        <fieldset className="bg-black bg-opacity-50 p-5 rounded-lg">
-          <legend className="text-xl mb-4 text-white font-bold flex items-center px-2">
-            <span className="bg-green-800 text-white w-7 h-7 rounded-full flex items-center justify-center mr-3">
-              2
-            </span>
-            Link your wallet
-          </legend>
-          <div className="flex flex-col items-center gap-4 h-24 mb-2">
-            <button
-              type="button"
-              onClick={connectWallet}
-              disabled={isLoading}
-              aria-label={
-                walletAddress ? "Disconnect wallet" : "Connect wallet"
-              }
-              className={`${walletAddress ? "bg-red-700 hover:bg-red-600" : "bg-green-700 hover:bg-green-600"} text-white font-bold py-3 px-6 rounded-md shadow-md transition duration-150 ease-in-out flex items-center justify-center   focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2 focus:ring-offset-black cursor-pointer`}
-            >
-              {isLoading ? (
-                <svg
-                  className="animate-spin -ml-1 mr-2 h-5 w-5 text-white"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
-                >
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                  ></circle>
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  ></path>
-                </svg>
-              ) : null}
-              {walletAddress ? "Disconnect Wallet" : "Connect Wallet"}
-            </button>
-            <div
-              className="flex flex-col justify-center items-center"
-              aria-live="polite"
-            >
-              <div className="text-gray-400 text-sm ">
-                <span
-                  className={` text-center flex items-center ${walletAddress ? "text-green-400" : "text-yellow-500"}`}
-                >
-                  {walletAddress ? (
-                    <>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-4 w-4 mr-1"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        aria-hidden="true"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                        />
-                      </svg>
-                      Connected
-                    </>
-                  ) : (
-                    <>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-4 w-4 mr-1"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        aria-hidden="true"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-                        />
-                      </svg>
-                      Not Connected
-                    </>
-                  )}
+        {!(rewardAddress?.length > 5) && (
+          <>
+            <fieldset className="bg-black bg-opacity-50 p-5 rounded-lg">
+              <legend className="text-xl mb-4 text-white font-bold flex items-center px-2">
+                <span className="bg-green-800 text-white w-7 h-7 rounded-full flex items-center justify-center mr-3">
+                  2
                 </span>
-              </div>
-
-              {walletAddress && (
-                <div className="flex items-center flex-col mt-1 gap-1">
-                  <p className="text-xs text-gray-400 font-mono break-all text-center">
-                    {walletAddress}
-                  </p>
-                  <button
-                    onClick={() => copyToClipboard(walletAddress)}
-                    className="ml-2 p-1 text-gray-400 hover:text-white transition-colors rounded-md focus:outline-none focus:ring-2 focus:ring-green-400"
-                    aria-label="Copy address to clipboard"
-                    title="Copy to clipboard"
-                  >
-                    {copySuccess ? (
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-4 w-4 text-green-400"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                      >
-                        <path d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" />
-                      </svg>
-                    ) : (
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-4 w-4"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                      >
-                        <path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" />
-                        <path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z" />
-                      </svg>
-                    )}
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
-        </fieldset>
-
-        <fieldset className="bg-black bg-opacity-50 p-5 rounded-lg">
-          <legend className="text-xl mb-4 text-white font-bold flex items-center px-2">
-            <span className="bg-green-800 text-white w-7 h-7 rounded-full flex items-center justify-center mr-3">
-              3
-            </span>
-            Confirm
-          </legend>
-          <div className="flex flex-col items-center gap-4 mb-2">
-            <button
-              type="button"
-              ref={confirmButtonRef}
-              onClick={confirmLinking}
-              disabled={
-                !(walletAddress && walletAddress.length > 5) ||
-                !(googleID?.length > 5) ||
-                isLoading ||
-                rewardAddress?.length > 5
-              }
-              className={
-                !(walletAddress && walletAddress.length > 5) ||
-                !(googleID?.length > 5) ||
-                isLoading ||
-                rewardAddress?.length > 5
-                  ? disabledButtonStyle
-                  : buttonStyle
-              }
-              aria-live="polite"
-            >
-              {isLoading ? (
-                <svg
-                  className="animate-spin -ml-1 mr-2 h-5 w-5 text-white"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
+                Link your wallet
+              </legend>
+              <div className="flex flex-col items-center gap-4 h-24 mb-2">
+                <button
+                  type="button"
+                  onClick={connectWallet}
+                  disabled={isLoading}
+                  aria-label={
+                    walletAddress ? "Disconnect wallet" : "Connect wallet"
+                  }
+                  className={`${walletAddress ? "bg-red-700 hover:bg-red-600" : "bg-green-700 hover:bg-green-600"} text-white font-bold py-3 px-6 rounded-md shadow-md transition duration-150 ease-in-out flex items-center justify-center   focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2 focus:ring-offset-black cursor-pointer`}
                 >
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                  ></circle>
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  ></path>
-                </svg>
-              ) : null}
-              {rewardAddress?.length > 5
-                ? "Reward address linked"
-                : "Confirm Wallet Linking"}
-            </button>
-            {(!(walletAddress && walletAddress.length > 5) ||
-              !(googleID?.length > 5)) &&
-            !(rewardAddress?.length > 5) ? (
-              <p className="text-xs text-yellow-500">
-                {!googleID?.length
-                  ? "Please log in with Google first"
-                  : !walletAddress
-                    ? "Please connect your wallet"
-                    : ""}
-              </p>
-            ) : null}
-          </div>
-        </fieldset>
+                  {isLoading ? (
+                    <svg
+                      className="animate-spin -ml-1 mr-2 h-5 w-5 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      aria-hidden="true"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
+                    </svg>
+                  ) : null}
+                  {walletAddress ? "Disconnect Wallet" : "Connect Wallet"}
+                </button>
+                <div
+                  className="flex flex-col justify-center items-center"
+                  aria-live="polite"
+                >
+                  <div className="text-gray-400 text-sm ">
+                    <span
+                      className={` text-center flex items-center ${walletAddress ? "text-green-400" : "text-yellow-500"}`}
+                    >
+                      {walletAddress ? (
+                        <>
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-4 w-4 mr-1"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            aria-hidden="true"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                            />
+                          </svg>
+                          Connected
+                        </>
+                      ) : (
+                        <>
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-4 w-4 mr-1"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            aria-hidden="true"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                            />
+                          </svg>
+                          Not Connected
+                        </>
+                      )}
+                    </span>
+                  </div>
+
+                  {walletAddress && (
+                    <div className="flex items-center flex-col mt-1 gap-1">
+                      <p className="text-xs text-gray-400 font-mono break-all text-center">
+                        {walletAddress}
+                      </p>
+                      <button
+                        onClick={() => copyToClipboard(walletAddress)}
+                        className="ml-2 p-1 text-gray-400 hover:text-white transition-colors rounded-md focus:outline-none focus:ring-2 focus:ring-green-400"
+                        aria-label="Copy address to clipboard"
+                        title="Copy to clipboard"
+                      >
+                        {copySuccess ? (
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-4 w-4 text-green-400"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                          >
+                            <path d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" />
+                          </svg>
+                        ) : (
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-4 w-4"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                          >
+                            <path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" />
+                            <path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z" />
+                          </svg>
+                        )}
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </fieldset>
+
+            <fieldset className="bg-black bg-opacity-50 p-5 rounded-lg">
+              <legend className="text-xl mb-4 text-white font-bold flex items-center px-2">
+                <span className="bg-green-800 text-white w-7 h-7 rounded-full flex items-center justify-center mr-3">
+                  3
+                </span>
+                Confirm
+              </legend>
+              <div className="flex flex-col items-center gap-4 mb-2">
+                <button
+                  type="button"
+                  ref={confirmButtonRef}
+                  onClick={confirmLinking}
+                  disabled={
+                    !(walletAddress && walletAddress.length > 5) ||
+                    !(googleID?.length > 5) ||
+                    isLoading ||
+                    rewardAddress?.length > 5
+                  }
+                  className={
+                    !(walletAddress && walletAddress.length > 5) ||
+                    !(googleID?.length > 5) ||
+                    isLoading ||
+                    rewardAddress?.length > 5
+                      ? disabledButtonStyle
+                      : buttonStyle
+                  }
+                  aria-live="polite"
+                >
+                  {isLoading ? (
+                    <svg
+                      className="animate-spin -ml-1 mr-2 h-5 w-5 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      aria-hidden="true"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
+                    </svg>
+                  ) : null}
+                  {rewardAddress?.length > 5
+                    ? "Reward address linked"
+                    : "Confirm Wallet Linking"}
+                </button>
+                {(!(walletAddress && walletAddress.length > 5) ||
+                  !(googleID?.length > 5)) &&
+                !(rewardAddress?.length > 5) ? (
+                  <p className="text-xs text-yellow-500">
+                    {!googleID?.length
+                      ? "Please log in with Google first"
+                      : !walletAddress
+                        ? "Please connect your wallet"
+                        : ""}
+                  </p>
+                ) : null}
+              </div>
+            </fieldset>
+          </>
+        )}
       </form>
 
       {rewardAddress?.length > 5 && (
