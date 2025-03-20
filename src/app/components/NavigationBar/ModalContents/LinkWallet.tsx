@@ -115,7 +115,7 @@ export function LinkWallet() {
   }, [googleID, isLogin]);
 
   return (
-    <div className="max-w-lg mx-auto">
+    <div className="max-w-lg mx-0 sm:mx-auto">
       <Toaster
         position="top-right"
         toastOptions={{

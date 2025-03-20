@@ -64,7 +64,7 @@ export default function LinkWalletPage() {
             </h1>
           </div>
 
-          <div className="overflow-auto  stable-scrollbar">
+          <div className="overflow-auto stable-scrollbar">
             <LinkWallet />
           </div>
         </section>
