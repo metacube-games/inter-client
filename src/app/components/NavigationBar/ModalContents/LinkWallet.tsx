@@ -114,70 +114,6 @@ export function LinkWallet() {
       .catch((err) => console.error(err));
   }, [googleID, isLogin]);
 
-  if (rewardAddress?.length > 5) {
-    return (
-      <div className="text-center" role="status" aria-live="polite">
-        <div className="mb-6 inline-block p-3 bg-green-900 bg-opacity-30 rounded-full">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-12 w-12 text-green-400"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            aria-hidden="true"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M5 13l4 4L19 7"
-            />
-          </svg>
-        </div>
-        <h2 className="text-xl sm:text-2xl mb-6 text-white font-bold">
-          All good! You have a reward address linked.
-        </h2>
-        <div className="flex justify-center mt-6 mb-6 flex-col text-center gap-4">
-          <div className="p-4 bg-black bg-opacity-50 rounded-lg border border-green-800 inline-block mx-auto group hover:bg-opacity-70 transition-all duration-200">
-            <p className="text-gray-400 mb-1 text-sm">Reward address:</p>
-            <div className="flex items-center justify-center">
-              <p className="text-green-400 font-mono break-all">
-                {rewardAddress}
-              </p>
-              <button
-                onClick={() => copyToClipboard(rewardAddress)}
-                className="ml-2 p-1 text-gray-400 hover:text-white transition-colors rounded-md focus:outline-none focus:ring-2 focus:ring-green-400"
-                aria-label="Copy address to clipboard"
-                title="Copy to clipboard"
-              >
-                {copySuccess ? (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-5 w-5 text-green-400"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" />
-                  </svg>
-                ) : (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-5 w-5"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" />
-                    <path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z" />
-                  </svg>
-                )}
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="max-w-lg mx-auto">
       <Toaster
@@ -223,7 +159,7 @@ export function LinkWallet() {
           >
             <Image
               src="/argentX.webp"
-              alt=""
+              alt="Argent X Wallet"
               width={60}
               height={50}
               style={{ height: "auto" }}
@@ -257,19 +193,19 @@ export function LinkWallet() {
 
       <form onSubmit={(e) => e.preventDefault()} className="space-y-8 mt-8">
         <fieldset className="bg-black bg-opacity-50 p-5 rounded-lg">
-          <legend className="text-xl font-bold mb-4 text-white flex items-center px-2">
+          <legend className="text-xl font-bold   text-white flex items-center px-2">
             <span className="bg-green-800 text-white w-7 h-7 rounded-full flex items-center justify-center mr-3">
               1
             </span>
             Log your Google account
           </legend>
-          <div className="flex justify-center mt-4 mb-2">
+          <div className="flex justify-start flex-col items-center gap-3 h-24">
             <LoginButton onlyGoogleLogin />
 
             {!(googleID?.length > 5) ? (
               <></> // <LoginButton onlyGoogleLogin />
             ) : (
-              <div className="flex items-center text-white bg-green-900 bg-opacity-50 px-4 py-2 rounded-md">
+              <div className="flex items-center text-white bg-green-900/50 p-2 rounded-sm">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-5 w-5 mr-2 text-green-400"
@@ -485,6 +421,51 @@ export function LinkWallet() {
           </div>
         </fieldset>
       </form>
+
+      {rewardAddress?.length > 5 && (
+        <div className="text-center" role="status" aria-live="polite">
+          <h2 className="text-xl sm:text-2xl mb-6 text-white font-bold">
+            All good! You have a reward address linked.
+          </h2>
+          <div className="flex justify-center mt-6 mb-6 flex-col text-center gap-4">
+            <div className="p-4 bg-black bg-opacity-50 rounded-lg border border-green-800 inline-block mx-auto group hover:bg-opacity-70 transition-all duration-200">
+              <p className="text-gray-400 mb-1 text-sm">Reward address:</p>
+              <div className="flex items-center justify-center">
+                <p className="text-green-400 font-mono break-all text-sm">
+                  {rewardAddress}
+                </p>
+                <button
+                  onClick={() => copyToClipboard(rewardAddress)}
+                  className="ml-2 p-1 text-gray-400 hover:text-white transition-colors rounded-md focus:outline-none focus:ring-2 focus:ring-green-400"
+                  aria-label="Copy address to clipboard"
+                  title="Copy to clipboard"
+                >
+                  {copySuccess ? (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5 text-green-400"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" />
+                    </svg>
+                  ) : (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" />
+                      <path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z" />
+                    </svg>
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

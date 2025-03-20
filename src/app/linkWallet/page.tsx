@@ -8,22 +8,7 @@ export default function LinkWalletPage() {
     <>
       <main className="relative flex min-h-screen flex-col items-center justify-between">
         {/* Background Image/Video with preload for better performance */}
-        <div
-          className="absolute inset-0 w-full h-full brightness-75 z-0"
-          aria-hidden="true"
-        >
-          <video
-            src="/Trim.mp4"
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="auto"
-            className="absolute w-full h-full object-cover opacity-75 brightness-75"
-            aria-hidden="true"
-          />
-          <div className="absolute inset-0 bg-black bg-opacity-60 backdrop-blur-sm"></div>
-        </div>
+        <div className="absolute inset-0 bg-black" />
 
         {/* Header with improved accessibility */}
         <header className="relative z-10 w-full">
@@ -71,17 +56,6 @@ export default function LinkWalletPage() {
           aria-labelledby="wallet-linking-title"
         >
           <div className="flex items-center justify-center mb-8">
-            <div className="w-16 h-16 relative mr-4">
-              <Image
-                src="/argentX.webp"
-                alt=""
-                width={64}
-                height={64}
-                style={{ height: "auto" }}
-                className="object-contain"
-                aria-hidden="true"
-              />
-            </div>
             <h1
               id="wallet-linking-title"
               className="text-2xl md:text-3xl font-bold text-green-400"
