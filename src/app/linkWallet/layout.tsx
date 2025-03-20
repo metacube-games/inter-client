@@ -1,0 +1,49 @@
+import type { Metadata, Viewport } from "next";
+
+export const metadata: Metadata = {
+  title: "Link Wallet - Metacube",
+  description: "Link your wallet to receive rewards from Metacube Games",
+  keywords: [
+    "wallet",
+    "blockchain",
+    "rewards",
+    "metacube",
+    "games",
+    "starknet",
+    "crypto",
+  ],
+  authors: [{ name: "Metacube Games" }],
+  openGraph: {
+    title: "Link Your Wallet - Metacube Games",
+    description:
+      "Connect your wallet and receive your rewards from Metacube Games",
+    type: "website",
+    siteName: "Metacube Games",
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Link Your Wallet - Metacube Games",
+    description:
+      "Connect your wallet and receive your rewards from Metacube Games",
+    creator: "@metacubeGames",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: "#10B981",
+};
+
+export default function LinkWalletLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return children;
+}

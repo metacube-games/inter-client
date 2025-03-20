@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import Link from "next/link";
 import { MenuItems } from "./MenuItems";
-import { LoginButton } from "./LoginButton";
 import { Modal } from "./Modal";
 
 export function NavigationBar() {
@@ -14,7 +13,6 @@ export function NavigationBar() {
       </Link>
       <div className="flex items-center space-x-4">
         <MenuItems />
-        {/* <LoginButton /> */}
       </div>
       <Modal />
     </nav>
