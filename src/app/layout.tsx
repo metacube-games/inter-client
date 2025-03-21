@@ -58,12 +58,6 @@ export const metadata: Metadata = {
       },
     ],
   },
-  alternates: {
-    canonical: "https://play.metacube.games",
-    languages: {
-      "en-US": "https://play.metacube.games",
-    },
-  },
 };
 
 export const viewport: Viewport = {

@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useRef } from "react";
+import React, { useEffect, useCallback } from "react";
 import { GoogleLogin } from "@react-oauth/google";
 import toast, { Toaster } from "react-hot-toast";
 import { SAG, useAuthStore } from "@/app/store/authStore";
@@ -7,15 +7,10 @@ import { connectToStarknet, disconnectWallet } from "@/app/utils/walletUtils";
 import {
   postConnectGoogle,
   disconnect,
-  getRefresh,
   setAccessToken,
 } from "@/app/backendAPI/backendAPI";
-import { setPublicKeyFromCookies } from "@/app/utils/starknet";
 import ReactDOM from "react-dom";
 import { useShallow } from "zustand/react/shallow";
-
-// Refresh interval in ms (4.5 minutes here)
-const REFRESH_INTERVAL = 270000;
 
 // The main Login component
 export function LoginButton({
@@ -32,57 +27,6 @@ export function LoginButton({
       address: state.address,
     }))
   );
-
-  // State to track whether we've initialized the refresh interval
-  const hasIntervalBeenSetRef = useRef(false);
-  const refreshIntervalIDRef = useRef<number | null>(null);
-
-  // Function to set up a periodic refresh
-  const initiateRefreshInterval = useCallback(() => {
-    // Avoid re-creating the interval if it's already set
-    if (refreshIntervalIDRef.current !== null) return;
-
-    const id = window.setInterval(() => {
-      getRefresh(false)
-        .then((data: any) => {
-          setPublicKeyFromCookies(data?.playerData?.publicKey);
-          if (data?.accessToken) {
-            // Consider storing tokens in http-only secure cookies
-            setAccessToken(data?.accessToken);
-          }
-        })
-        .catch((err) => console.error("Refresh token error:", err));
-    }, REFRESH_INTERVAL);
-
-    refreshIntervalIDRef.current = id;
-  }, []);
-
-  // On mount, do an immediate refresh and set up the interval
-  useEffect(() => {
-    if (!hasIntervalBeenSetRef.current) {
-      SAG.setIsAuthLoading(true);
-
-      getRefresh(true)
-        .then((data: any) => {
-          setPublicKeyFromCookies(data?.playerData?.publicKey);
-          setInitialStates(data);
-        })
-        .catch((err) => console.error("Immediate refresh error:", err))
-        .finally(() => {
-          SAG.setIsAuthLoading(false);
-        });
-
-      initiateRefreshInterval();
-      hasIntervalBeenSetRef.current = true;
-    }
-
-    // Cleanup: clear the interval on unmount
-    return () => {
-      if (refreshIntervalIDRef.current) {
-        clearInterval(refreshIntervalIDRef.current);
-      }
-    };
-  }, [initiateRefreshInterval]);
 
   // Logout function
   const handleLogout = useCallback(async () => {

@@ -105,14 +105,14 @@ export function LinkWallet() {
   const disabledButtonStyle =
     "bg-gray-400 text-white font-bold py-2 px-6 rounded-md shadow-md cursor-not-allowed flex items-center justify-center";
 
-  useEffect(() => {
-    getRewardAddress()
-      .then((rewardAddress: any) => {
-        const fRewardAddress = `0x${rewardAddress?.address}`;
-        setRewardAddress(fRewardAddress);
-      })
-      .catch((err) => console.error(err));
-  }, [googleID, isLogin]);
+  // useEffect(() => {
+  //   getRewardAddress()
+  //     .then((rewardAddress: any) => {
+  //       const fRewardAddress = `0x${rewardAddress?.address}`;
+  //       setRewardAddress(fRewardAddress);
+  //     })
+  //     .catch((err) => console.error(err));
+  // }, [googleID, isLogin]);
 
   return (
     <div className="max-w-lg mx-0 sm:mx-auto">
