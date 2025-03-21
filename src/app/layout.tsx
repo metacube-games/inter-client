@@ -57,6 +57,7 @@ export const metadata: Metadata = {
         width: 1200,
         height: 630,
         alt: "Metacube - Web3 Gaming Platform on Starknet",
+        type: "image/jpeg",
       },
     ],
   },

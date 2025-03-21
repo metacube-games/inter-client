@@ -21,6 +21,15 @@ export const metadata: Metadata = {
     type: "website",
     siteName: "Metacube Games",
     locale: "en_US",
+    images: [
+      {
+        url: "https://metacube.games/opengraph-image.jpeg",
+        width: 1200,
+        height: 630,
+        alt: "Metacube - Web3 Gaming Platform on Starknet",
+        type: "image/jpeg",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
@@ -28,6 +37,12 @@ export const metadata: Metadata = {
     description:
       "Connect your wallet and receive your rewards from Metacube Games",
     creator: "@metacubeGames",
+    images: [
+      {
+        url: "https://metacube.games/opengraph-image.jpeg",
+        alt: "Metacube Gaming Platform on Starknet",
+      },
+    ],
   },
   robots: {
     index: true,
