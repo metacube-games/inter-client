@@ -9,61 +9,84 @@ const inter = Inter({ subsets: ["latin"] });
 // Enhanced Metadata for SEO and Social Sharing
 export const metadata: Metadata = {
   metadataBase: new URL("https://play.metacube.games"),
-  title: "Metacube Play | Free-to-Play Blockchain Game Countdown - Starknet",
+  title: {
+    default: "Metacube | Revolutionary Web3 Gaming Platform on Starknet",
+    template: "%s | Metacube Gaming",
+  },
   description:
-    "Join the countdown to Metacube’s launch on Starknet! Log in to view your assets and prepare for the ultimate free-to-play blockchain gaming experience.",
+    "Experience the future of gaming with Metacube on Starknet. Join our Web3 gaming platform featuring digital asset ownership, competitive gameplay, and blockchain integration.",
   keywords: [
     "Metacube",
+    "Web3 gaming",
     "Starknet blockchain",
-    "free-to-play game",
-    "blockchain gaming",
-    "NFT assets",
-    "multiplayer blockchain game",
-    "Metacube countdown",
-    "digital collectibles",
+    "blockchain gaming platform",
+    "digital asset ownership",
+    "NFT gaming",
+    "competitive blockchain games",
+    "play-to-own",
+    "Web3 game platform",
+    "Starknet dApp",
     "crypto gaming",
-    "Starknet NFT",
+    "blockchain entertainment",
   ],
   authors: [{ name: "Clashware Sàrl", url: "https://metacube.games" }],
   creator: "Clashware Sàrl",
   publisher: "Metacube Games",
-  robots: "index, follow",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
   openGraph: {
-    title: "Metacube Play | Free-to-Play Blockchain Game Countdown",
+    title: "Metacube | Revolutionary Web3 Gaming Platform",
     description:
-      "Get ready for Metacube: a free-to-play multiplayer blockchain game on Starknet. Log in, check your assets, and join the launch countdown!",
+      "Join Metacube's Web3 gaming revolution on Starknet. Experience true digital asset ownership, competitive gameplay, and the future of blockchain gaming.",
     url: "https://play.metacube.games",
-    siteName: "Metacube",
+    siteName: "Metacube Gaming",
     type: "website",
     locale: "en_US",
     images: [
       {
-        url: "https://metacube.games/metadata-image.png",
+        url: "https://metacube.games/opengraph-image.jpeg",
         width: 1200,
         height: 630,
-        alt: "Metacube Countdown - Free-to-Play Blockchain Game on Starknet",
+        alt: "Metacube - Web3 Gaming Platform on Starknet",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Metacube Play | Free-to-Play Blockchain Game Countdown",
+    title: "Metacube | Web3 Gaming Revolution",
     description:
-      "Countdown to Metacube’s launch on Starknet! Log in to see your assets and join the free-to-play blockchain gaming revolution.",
+      "Step into the future of gaming with Metacube on Starknet. Experience true digital asset ownership and competitive blockchain gaming.",
     creator: "@MetacubeGames",
+    site: "@MetacubeGames",
     images: [
       {
-        url: "https://metacube.games/metadata-image.png",
-        alt: "Metacube Launch Countdown on Starknet",
+        url: "https://metacube.games/opengraph-image.jpeg",
+        alt: "Metacube Gaming Platform on Starknet",
       },
     ],
+  },
+  alternates: {
+    canonical: "https://play.metacube.games",
   },
 };
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
+  themeColor: "#000000",
+  colorScheme: "dark",
 };
+
+// add tab icon
 
 // Root Layout Component
 export default function RootLayout({
@@ -74,47 +97,66 @@ export default function RootLayout({
   return (
     <html lang="en" className="custom-scrollbar">
       <head>
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         {/* Preconnect to Google OAuth for faster login */}
         <link rel="dns-prefetch" href="https://accounts.google.com" />
-        {/* Structured Data for Game and Countdown */}
+        <link
+          rel="preconnect"
+          href="https://accounts.google.com"
+          crossOrigin="anonymous"
+        />
+
+        {/* Enhanced Structured Data */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify([
-              {
-                "@context": "https://schema.org",
-                "@type": "VideoGame",
-                name: "Metacube",
-                description:
-                  "Metacube is a free-to-play multiplayer blockchain game on Starknet. Log in to view your assets and join the countdown to launch!",
-                genre: ["Blockchain", "Free-to-Play", "Multiplayer"],
-                gamePlatform: "Starknet",
-                url: "https://play.metacube.games",
-                offers: {
-                  "@type": "Offer",
-                  price: "0",
-                  priceCurrency: "USD",
-                  availability: "https://schema.org/PreOrder",
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@graph": [
+                {
+                  "@type": "WebSite",
+                  "@id": "https://play.metacube.games/#website",
+                  url: "https://play.metacube.games",
+                  name: "Metacube Gaming",
+                  description: "Revolutionary Web3 Gaming Platform on Starknet",
+                  publisher: {
+                    "@type": "Organization",
+                    name: "Metacube Games",
+                    url: "https://metacube.games",
+                    logo: {
+                      "@type": "ImageObject",
+                      url: "https://metacube.games/logo.png",
+                    },
+                    sameAs: [
+                      "https://twitter.com/MetacubeGames",
+                      "https://discord.gg/FGV6HkMbNj",
+                    ],
+                  },
                 },
-              },
-              {
-                "@context": "https://schema.org",
-                "@type": "Event",
-                name: "Metacube Game Launch Countdown",
-                description:
-                  "Countdown to the launch of Metacube, a free-to-play blockchain game on Starknet.",
-                url: "https://play.metacube.games",
-                startDate: "2025-03-15T00:00:00Z", // Replace with actual launch date
-                eventStatus: "https://schema.org/EventScheduled",
-                eventAttendanceMode:
-                  "https://schema.org/OnlineEventAttendanceMode",
-                organizer: {
-                  "@type": "Organization",
-                  name: "Metacube Games",
-                  url: "https://metacube.games",
+                {
+                  "@type": "VideoGame",
+                  name: "Metacube",
+                  description:
+                    "A revolutionary Web3 gaming platform on Starknet featuring true digital asset ownership and competitive gameplay.",
+                  genre: ["Blockchain", "Web3", "Competitive"],
+                  gamePlatform: ["Web Browser", "Starknet"],
+                  url: "https://play.metacube.games",
+                  applicationCategory: "Game",
+                  operatingSystem: "Web Browser",
+                  offers: {
+                    "@type": "Offer",
+                    price: "0",
+                    priceCurrency: "USD",
+                    availability: "https://schema.org/InStock",
+                  },
+                  publisher: {
+                    "@type": "Organization",
+                    name: "Metacube Games",
+                  },
                 },
-              },
-            ]),
+              ],
+            }),
           }}
         />
       </head>

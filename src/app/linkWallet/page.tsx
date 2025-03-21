@@ -2,6 +2,50 @@ import React from "react";
 import { LinkWallet } from "../components/NavigationBar/ModalContents/LinkWallet";
 import Link from "next/link";
 import Image from "next/image";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Link Your Wallet | Metacube - Web3 Gaming Platform",
+  description:
+    "Connect your Web3 wallet to Metacube and unlock exclusive features, digital asset ownership, and in-game rewards in our blockchain gaming ecosystem on Starknet.",
+  keywords: [
+    "Metacube wallet",
+    "Web3 wallet connection",
+    "Starknet gaming",
+    "blockchain gaming wallet",
+    "digital asset ownership",
+    "gaming NFT wallet",
+    "Metacube connect",
+    "crypto gaming account",
+    "Web3 gaming platform",
+    "Starknet wallet",
+  ],
+  openGraph: {
+    title: "Connect Your Wallet to Metacube Gaming Platform",
+    description:
+      "Link your Web3 wallet to access Metacube's gaming features, manage digital assets, and join our blockchain gaming community on Starknet.",
+    images: [
+      {
+        url: "https://metacube.games/wallet-connect.png",
+        width: 1200,
+        height: 630,
+        alt: "Metacube Wallet Connection Interface",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Connect Your Wallet to Metacube Gaming",
+    description:
+      "Link your Web3 wallet to join Metacube's gaming ecosystem. Manage assets and unlock exclusive features on Starknet.",
+    images: [
+      {
+        url: "https://metacube.games/wallet-connect.png",
+        alt: "Metacube Web3 Wallet Connection",
+      },
+    ],
+  },
+};
 
 export default function LinkWalletPage() {
   return (
@@ -70,7 +114,7 @@ export default function LinkWalletPage() {
         </section>
 
         {/* Footer with improved structure and accessibility */}
-        <footer className="relative z-10 w-full text-center text-white p-6 mt-auto">
+        <footer className="relative z-10 w-full text-center text-white p-6">
           <div className="max-w-5xl mx-auto">
             <p className="text-sm opacity-70">
               © {new Date().getFullYear()} Metacube Games. All rights reserved.
@@ -110,6 +154,31 @@ export default function LinkWalletPage() {
           </div>
         </footer>
       </main>
+
+      {/* SEO Content */}
+      <div className="w-full bg-black py-16 border-t border-white/10">
+        <div className="max-w-4xl mx-auto px-4 text-white/80 text-sm text-center">
+          <p className="mb-3">
+            Connect your Web3 wallet to unlock the full potential of
+            Metacube&apos;s gaming ecosystem. Our secure wallet linking system
+            ensures seamless integration with our platform and future gaming
+            experiences on the StarkNet blockchain.
+          </p>
+          <p className="mb-3">
+            By linking your wallet, you gain access to exclusive features,
+            including digital asset ownership, in-game rewards, and
+            participation in our growing gaming community. Experience the power
+            of decentralized gaming with enhanced security and true ownership of
+            your gaming assets.
+          </p>
+          <p>
+            Join thousands of players who have already connected their wallets
+            to Metacube, becoming part of the next generation of blockchain
+            gaming. Your journey into Web3 gaming starts here, with a simple and
+            secure wallet connection.
+          </p>
+        </div>
+      </div>
     </>
   );
 }
