@@ -1,14 +1,17 @@
 "use client";
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { LoginButton } from "../LoginButton";
 import { connect, disconnect } from "get-starknet";
 import {
   getRewardAddress,
+  setAccessToken,
   setRewardAddressBAPI,
 } from "@/app/backendAPI/backendAPI";
 import Image from "next/image";
-import { useAuthStore } from "@/app/store/authStore";
+import { SAG, useAuthStore } from "@/app/store/authStore";
+import { connectToStarknet } from "@/app/utils/walletUtils";
 import toast, { Toaster } from "react-hot-toast";
+import { disconnectWallet } from "@/app/utils/walletUtils";
 
 export function LinkWallet() {
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
@@ -57,7 +60,7 @@ export function LinkWallet() {
     } else {
       // Connect logic
       setIsLoading(true);
-      connect()
+      await connectToStarknet()
         .then((starknet) => {
           if (starknet) {
             return starknet.enable();

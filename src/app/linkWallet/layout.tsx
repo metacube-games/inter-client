@@ -39,6 +39,8 @@ export const metadata: Metadata = {
     creator: "@metacubeGames",
     images: [
       {
+        width: 1200,
+        height: 630,
         url: "https://metacube.games/opengraph-image.jpeg",
         alt: "Metacube Gaming Platform on Starknet",
       },

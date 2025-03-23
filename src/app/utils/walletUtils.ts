@@ -18,36 +18,36 @@ export async function connectToStarknet() {
     modalMode: "alwaysAsk",
     modalTheme: "dark",
   });
+  return connection;
+  // if (connection && connection.isConnected) {
+  //   const address = connection.selectedAddress || connection.account.address;
+  //   setPublicKey(connection);
 
-  if (connection && connection.isConnected) {
-    const address = connection.selectedAddress || connection.account.address;
-    setPublicKey(connection);
+  //   const nonceData = (await getNonce(getPublicKey())) as any;
+  //   const signature = await signMessage(connection, nonceData?.nonce);
 
-    const nonceData = (await getNonce(getPublicKey())) as any;
-    const signature = await signMessage(connection, nonceData?.nonce);
+  //   if (signature.length !== 3) {
+  //     signature.unshift(0);
+  //   }
+  //   if (signature.length === 5) {
+  //     signature[1] = signature[1] + "|" + signature[2];
+  //     signature[2] = signature[3] + "|" + signature[4];
+  //   }
+  //   if (signature.length === 6) {
+  //     signature[1] = signature[4];
+  //     signature[2] = signature[5];
+  //   }
 
-    if (signature.length !== 3) {
-      signature.unshift(0);
-    }
-    if (signature.length === 5) {
-      signature[1] = signature[1] + "|" + signature[2];
-      signature[2] = signature[3] + "|" + signature[4];
-    }
-    if (signature.length === 6) {
-      signature[1] = signature[4];
-      signature[2] = signature[5];
-    }
-
-    const data = await postConnect(
-      getPublicKey(),
-      signature[1],
-      signature[2]
-    ).then((data: any) => {
-      if (data?.accessToken) setAccessToken(data.accessToken);
-      return data;
-    });
-    return data;
-  }
+  //   const data = await postConnect(
+  //     getPublicKey(),
+  //     signature[1],
+  //     signature[2]
+  //   ).then((data: any) => {
+  //     if (data?.accessToken) setAccessToken(data.accessToken);
+  //     return data;
+  //   });
+  //   return data;
+  // }
   return null;
 }
 
