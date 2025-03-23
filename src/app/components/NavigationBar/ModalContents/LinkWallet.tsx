@@ -1,10 +1,9 @@
 "use client";
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import { LoginButton } from "../LoginButton";
-import { connect, disconnect } from "get-starknet";
+import { disconnect } from "get-starknet";
 import {
   getRewardAddress,
-  setAccessToken,
   setRewardAddressBAPI,
 } from "@/app/backendAPI/backendAPI";
 import Image from "next/image";
@@ -18,7 +17,6 @@ export function LinkWallet() {
   const [rewardAddress, setRewardAddress] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [copySuccess, setCopySuccess] = useState(false);
-  const isLogin = useAuthStore((state) => state.isConnected);
   const googleID = useAuthStore((state) => state.googleId);
   const confirmButtonRef = useRef<HTMLButtonElement>(null);
 
