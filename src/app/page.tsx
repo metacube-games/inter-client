@@ -142,8 +142,8 @@ export default function Home() {
             a world where gaming meets decentralization.
           </p>
           <p className="mb-3">
-            At Metacube, players don't just play — they own, trade, and shape
-            the universe. Built on cutting-edge blockchain technology, our
+            At Metacube, players don&apos;t just play — they own, trade, and
+            shape the universe. Built on cutting-edge blockchain technology, our
             platform empowers gamers with real asset ownership, competitive
             multiplayer experiences, and a community-first approach to game
             development.
