@@ -136,23 +136,24 @@ export default function Home() {
       <div className="w-full bg-black py-16 border-t border-white/10">
         <div className="max-w-4xl mx-auto px-4 text-white/80 text-sm text-center">
           <p className="mb-3">
-            Welcome to Metacube, where innovation meets gaming excellence. Our
-            groundbreaking blockchain gaming platform combines strategic
-            gameplay with Web3 integration, creating an unparalleled gaming
-            experience.
+            Discover Metacube — the next generation in blockchain gaming. Our
+            innovative Web3-powered platform redefines immersive gameplay by
+            blending strategic mechanics with true digital ownership. Step into
+            a world where gaming meets decentralization.
           </p>
           <p className="mb-3">
-            Join the revolution in gaming as we build an immersive universe
-            where players can own, trade, and influence their gaming experience
-            through blockchain technology. Metacube brings together competitive
-            gaming, digital asset ownership, and community-driven development.
+            At Metacube, players don't just play — they own, trade, and shape
+            the universe. Built on cutting-edge blockchain technology, our
+            platform empowers gamers with real asset ownership, competitive
+            multiplayer experiences, and a community-first approach to game
+            development.
           </p>
           <p>
-            Experience the future of gaming with Metacube - where every player
-            becomes part of our growing ecosystem, shaping the future of
-            decentralized gaming entertainment. Connect with our vibrant
-            community on Discord and Twitter to stay updated on exclusive
-            releases, events, and opportunities.
+            Join the decentralized gaming revolution with Metacube. Be part of a
+            growing ecosystem where every move matters, and your impact is
+            permanent. Stay ahead with updates, exclusive NFT drops, and
+            community events — follow us on Discord and Twitter to start your
+            journey today.
           </p>
         </div>
       </div>

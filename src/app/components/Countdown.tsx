@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import { useModalStore } from "../store/connexionModalStore";
 
 const TimeUnit = ({ value, unit }: { value: number; unit: string }) => (
-  <div className="inline-block mb-2 sm:mb-0 sm:mx-2">
-    <span className="font-bold text-2xl sm:text-3xl">?</span>{" "}
+  <div className="inline-block mb-2 sm:mb-0 sm:mx-2 lg:w-[145px]">
+    <span className="font-bold text-2xl sm:text-3xl">{value}</span>{" "}
     <span className="text-lg sm:text-2xl">{unit}</span>
   </div>
 );
@@ -26,7 +26,7 @@ export const Countdown = ({
   const setActiveModal = useModalStore((state) => state.setActiveModal);
 
   useEffect(() => {
-    const targetDate = new Date(Date.UTC(2025, 3, 20, 16, 0, 0));
+    const targetDate = new Date(Date.UTC(2025, 3, 5, 14, 0, 0)); // April 5, 2025, 18:00 Zurich time (UTC+2)
     const targetFinishDate = new Date(Date.UTC(2025, 10, 11, 0, 0, 0));
 
     const updateTimer = () => {
