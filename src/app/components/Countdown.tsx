@@ -26,7 +26,7 @@ export const Countdown = ({
   const setActiveModal = useModalStore((state) => state.setActiveModal);
 
   useEffect(() => {
-    const targetDate = new Date(Date.UTC(2025, 3, 5, 14, 0, 0)); // April 5, 2025, 18:00 Zurich time (UTC+2)
+    const targetDate = new Date(Date.UTC(2025, 3, 5, 15, 0, 0)); // April 5, 2025, 18:00 Zurich time (UTC+2)
     const targetFinishDate = new Date(Date.UTC(2025, 10, 11, 0, 0, 0));
 
     const updateTimer = () => {
