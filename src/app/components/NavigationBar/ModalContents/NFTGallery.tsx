@@ -22,12 +22,16 @@ const generateProvider = async () => {
     nodeUrl: "https://starknet-mainnet.public.blastapi.io/rpc/v0_7",
   });
   const metacubeRootAbi = await provider.getClassAt(MGenesisAddress);
-  metacubeContract = new Contract(
-    metacubeRootAbi.abi,
-    MGenesisAddress,
-    provider
-  );
-  metacubePSContract = new Contract(metacubeRootAbi.abi, MGPASSCARD, provider);
+  metacubeContract = new Contract({
+    abi: metacubeRootAbi.abi,
+    address: MGenesisAddress,
+    providerOrAccount: provider
+  });
+  metacubePSContract = new Contract({
+    abi: metacubeRootAbi.abi,
+    address: MGPASSCARD,
+    providerOrAccount: provider
+  });
 };
 generateProvider();
 
